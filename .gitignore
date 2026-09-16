@@ -1,0 +1,16 @@
+# SPFx build output
+node_modules/
+lib/
+dist/
+temp/
+release/
+.heft/
+*.sppkg
+
+# Editor/OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
