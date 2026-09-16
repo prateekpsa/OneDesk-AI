@@ -14,3 +14,6 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Planning doc (local reference only, not shared)
+build_plan.md
