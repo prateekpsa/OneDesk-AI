@@ -1,0 +1,142 @@
+// =============================================================================
+// OneDesk console — Sass aliases for the design tokens
+// =============================================================================
+// Emits NO CSS. Safe to import in every .module.scss in the solution:
+//
+//   @import '../../styles/vars';
+//   @import '../../styles/mixins';
+//
+// Use these instead of writing var(--odc-…) by hand, and never write a literal
+// colour, radius or control height in a component stylesheet. If a value you
+// need is not here, add it to _tokens.scss first — that is the review gate that
+// keeps the tabs looking like one product.
+// -----------------------------------------------------------------------------
+
+// Surfaces
+$canvas: var(--odc-canvas);
+$surface: var(--odc-surface);
+$surface-subtle: var(--odc-surface-subtle);
+$surface-sunken: var(--odc-surface-sunken);
+$surface-hover: var(--odc-surface-hover);
+$surface-footer: var(--odc-surface-footer);
+
+// Lines
+$border: var(--odc-border);
+$border-strong: var(--odc-border-strong);
+$border-subtle: var(--odc-border-subtle);
+
+// Text
+$text: var(--odc-text);
+$text-secondary: var(--odc-text-secondary);
+$text-muted: var(--odc-text-muted);
+$text-caps: var(--odc-text-caps);
+$text-label: var(--odc-text-label);
+$text-on-fill: var(--odc-text-on-fill);
+
+// Non-text colours
+$icon-decorative: var(--odc-icon-decorative);
+$border-dashed: var(--odc-border-dashed);
+$surface-empty: var(--odc-surface-empty);
+$scrollbar-thumb: var(--odc-scrollbar-thumb);
+$scrollbar-thumb-hover: var(--odc-scrollbar-thumb-hover);
+
+// Action
+$action: var(--odc-action);
+$action-hover: var(--odc-action-hover);
+$action-active: var(--odc-action-active);
+$action-text: var(--odc-action-text);
+$action-tint: var(--odc-action-tint);
+$action-tint-strong: var(--odc-action-tint-strong);
+$action-tint-border: var(--odc-action-tint-border);
+$focus: var(--odc-focus);
+$focus-width: var(--odc-focus-width);
+$focus-offset: var(--odc-focus-offset);
+
+// Status tones
+$danger-bg: var(--odc-danger-bg);
+$danger-border: var(--odc-danger-border);
+$danger-text: var(--odc-danger-text);
+$danger-strong: var(--odc-danger-strong);
+$danger-ink: var(--odc-danger-ink);
+$field-error-border: var(--odc-field-error-border);
+$field-error-bg: var(--odc-field-error-bg);
+
+$warn-bg: var(--odc-warn-bg);
+$warn-border: var(--odc-warn-border);
+$warn-text: var(--odc-warn-text);
+$warn-strong: var(--odc-warn-strong);
+
+$success-bg: var(--odc-success-bg);
+$success-border: var(--odc-success-border);
+$success-text: var(--odc-success-text);
+
+$info-bg: var(--odc-info-bg);
+$info-border: var(--odc-info-border);
+$info-text: var(--odc-info-text);
+
+$neutral-bg: var(--odc-neutral-bg);
+$neutral-border: var(--odc-neutral-border);
+$neutral-text: var(--odc-neutral-text);
+
+$muted-bg: var(--odc-muted-bg);
+$muted-border: var(--odc-muted-border);
+$muted-text: var(--odc-muted-text);
+
+// Typography
+$font-display: var(--odc-font-display);
+$font-body: var(--odc-font-body);
+$font-mono: var(--odc-font-mono);
+
+$fs-page: var(--odc-fs-page);
+$fs-section: var(--odc-fs-section);
+$fs-card: var(--odc-fs-card);
+$fs-body: var(--odc-fs-body);
+$fs-table: var(--odc-fs-table);
+$fs-small: var(--odc-fs-small);
+$fs-caps: var(--odc-fs-caps);
+$fs-metric: var(--odc-fs-metric);
+
+$lh-tight: var(--odc-lh-tight);
+$lh-body: var(--odc-lh-body);
+$lh-prose: var(--odc-lh-prose);
+$tracking-caps: var(--odc-tracking-caps);
+
+// Shape
+$radius-sm: var(--odc-radius-sm);
+$radius-control: var(--odc-radius-control);
+$radius-panel: var(--odc-radius-panel);
+$radius-card: var(--odc-radius-card);
+$radius-pill: var(--odc-radius-pill);
+
+// Metrics
+$control-h: var(--odc-control-h);
+$control-h-lg: var(--odc-control-h-lg);
+$control-h-sm: var(--odc-control-h-sm);
+$topbar-h: var(--odc-topbar-h);
+$nav-w: var(--odc-nav-w);
+$nav-item-h: var(--odc-nav-item-h);
+$table-head-h: var(--odc-table-head-h);
+$row-h: var(--odc-row-h);
+$row-h-comfortable: var(--odc-row-h-comfortable);
+$pill-h: var(--odc-pill-h);
+$pill-h-lg: var(--odc-pill-h-lg);
+
+$space-1: var(--odc-space-1);
+$space-2: var(--odc-space-2);
+$space-3: var(--odc-space-3);
+$space-4: var(--odc-space-4);
+$space-5: var(--odc-space-5);
+$space-6: var(--odc-space-6);
+$space-7: var(--odc-space-7);
+$space-8: var(--odc-space-8);
+$space-9: var(--odc-space-9);
+$space-10: var(--odc-space-10);
+
+// Depth and motion
+$shadow-card: var(--odc-shadow-card);
+$shadow-raised: var(--odc-shadow-raised);
+$shadow-modal: var(--odc-shadow-modal);
+$duration: var(--odc-duration);
+$easing: var(--odc-easing);
+$z-sticky: var(--odc-z-sticky);
+$z-overlay: var(--odc-z-overlay);

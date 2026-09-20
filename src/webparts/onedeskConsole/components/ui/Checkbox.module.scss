@@ -1,0 +1,39 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-5;
+  padding: $space-5 $space-6;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-panel;
+  background: $surface-subtle;
+  cursor: pointer;
+}
+
+.input {
+  width: 17px;
+  height: 17px;
+  margin-top: 1px;
+  accent-color: $action;
+  flex-shrink: 0;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label {
+  font-size: $fs-table;
+  font-weight: 600;
+  color: $text;
+}
+
+.hint {
+  font-size: $fs-small;
+  color: $text-secondary;
+  line-height: $lh-body;
+}

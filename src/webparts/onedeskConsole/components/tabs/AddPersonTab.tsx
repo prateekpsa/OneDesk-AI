@@ -3,6 +3,7 @@ import styles from './Tab.module.scss';
 import type { IOneDeskDataService } from '../../services/IOneDeskDataService';
 import type { ITicket } from '../../models/ITicket';
 import type { IUserRole } from '../../models/IUserRole';
+import { TextInput, TextArea, Button, StatusBanner } from '../ui';
 
 export interface IAddPersonTabProps {
   service: IOneDeskDataService;
@@ -42,24 +43,36 @@ const AddPersonTab: React.FC<IAddPersonTabProps> = ({ service, ticket, role, onD
 
   return (
     <div className={styles.tab}>
-      <label>
-        Name (required)
-        <input value={personName} onChange={(e) => setPersonName(e.target.value)} />
-      </label>
-      <label>
-        Email (required)
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      </label>
-      <label>
-        Reason
-        <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={2} />
-      </label>
+      <p className={styles.description}>
+        They get one email, worded for awareness rather than action. Ownership does not change, and they can find the ticket
+        later under Shared with me.
+      </p>
 
-      <button disabled={!canSubmit} onClick={submit}>
-        Add concerned person
-      </button>
+      <TextInput label="Name" required placeholder="Riya Mehta" value={personName} onChange={(e) => setPersonName(e.target.value)} />
+      <TextInput
+        label="Work email"
+        type="email"
+        required
+        placeholder="name@preferredsquare.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextArea
+        label="Why they need to know"
+        hint="Optional."
+        placeholder="Same symptom on the same floor."
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+        rows={3}
+      />
 
-      {message && <p className={styles.message}>{message}</p>}
+      <div className={styles.actions}>
+        <Button variant="primary" fullWidth disabled={!canSubmit} busy={submitting} onClick={submit}>
+          Add and notify
+        </Button>
+      </div>
+
+      {message && <StatusBanner tone="info">{message}</StatusBanner>}
     </div>
   );
 };

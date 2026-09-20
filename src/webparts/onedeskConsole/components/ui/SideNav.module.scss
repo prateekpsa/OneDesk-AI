@@ -1,0 +1,128 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.sideNav {
+  width: $nav-w;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  padding: $space-5 $space-4;
+  background: $surface;
+  border-right: 1px solid $border-subtle;
+  overflow-y: auto;
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  flex-grow: 1;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: $space-4;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  & + & {
+    border-top: 1px solid $border-subtle;
+    margin-top: $space-2;
+  }
+}
+
+.groupLabel {
+  @include label-caps;
+
+  padding: $space-2 $space-4 $space-3;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  height: $nav-item-h;
+  padding: 0 $space-4;
+  border: none;
+  border-radius: $radius-panel;
+  background: transparent;
+  color: $text-secondary;
+  font-size: $fs-body;
+  text-align: left;
+
+  &:hover {
+    background: $surface-hover;
+  }
+}
+
+.itemActive {
+  background: $action-tint;
+  color: $action-text;
+  font-weight: 700;
+
+  &:hover {
+    background: $action-tint;
+  }
+}
+
+.itemLabel {
+  @include truncate;
+
+  flex-grow: 1;
+}
+
+.badge {
+  flex-shrink: 0;
+  min-width: 22px;
+  height: 19px;
+  padding: 0 $space-3;
+  border-radius: $radius-pill;
+  background: $surface-subtle;
+  border: 1px solid $border-subtle;
+  color: $text-label;
+  font-size: $fs-caps;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.itemActive .badge {
+  background: $surface;
+  border-color: $action-tint-border;
+  color: $action-text;
+}
+
+// --- scope card -----------------------------------------------------------------
+
+.scopeCard {
+  flex-shrink: 0;
+  padding: $space-5;
+  border-radius: $radius-panel;
+  background: $surface-subtle;
+  border: 1px solid $border-subtle;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.scopeLabel {
+  @include label-caps;
+}
+
+.scopeValue {
+  font-size: $fs-table;
+  font-weight: 600;
+  color: $text;
+}
+
+.scopeNote {
+  font-size: $fs-small;
+  color: $text-secondary;
+  line-height: $lh-body;
+}

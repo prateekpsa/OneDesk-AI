@@ -1,76 +1,107 @@
-@use '../../styles/tokens' as t;
+@import '../../styles/vars';
+@import '../../styles/mixins';
 
-.heading {
-  font-family: t.$font-display;
-  margin-top: 0;
+.userLookup {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  min-height: 0;
+  flex: 1 1 auto;
 }
 
 .searchRow {
+  @include card;
+
+  padding: $space-5;
   display: flex;
-  gap: t.$space-2;
-  margin-bottom: t.$space-3;
-
-  input {
-    flex: 1 1 320px;
-    font: inherit;
-    padding: t.$space-1 t.$space-2;
-    border: 1px solid t.$color-line-strong;
-    border-radius: t.$radius-sm;
-  }
-
-  button {
-    font: inherit;
-    background: t.$color-accent;
-    color: t.$color-surface;
-    border: none;
-    border-radius: t.$radius-sm;
-    padding: t.$space-1 t.$space-3;
-    cursor: pointer;
-
-    &:disabled {
-      background: t.$color-line-strong;
-      cursor: not-allowed;
-    }
-  }
+  align-items: flex-end;
+  gap: $space-4;
 }
 
-.error {
-  color: t.$color-danger;
+.searchInput {
+  flex-grow: 1;
 }
 
-.card {
-  background: t.$color-surface;
-  border: 1px solid t.$color-line;
-  border-radius: t.$radius;
-  padding: t.$space-3;
+// --- summary card --------------------------------------------------------------
+
+.summaryCard {
+  @include card;
+
+  padding: $space-6 $space-7;
+  display: flex;
+  align-items: center;
+  gap: $space-8;
 }
 
-.sectionHeading {
-  font-family: t.$font-display;
-  margin-top: t.$space-4;
+.summaryIdentity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-
-  th,
-  td {
-    text-align: left;
-    padding: t.$space-2;
-    border-bottom: 1px solid t.$color-line;
-  }
-
-  th {
-    color: t.$color-muted;
-    font-weight: 600;
-  }
+.summaryEmail {
+  font-family: $font-display;
+  font-size: $fs-card;
+  font-weight: 700;
+  color: $text;
 }
 
-.row {
-  cursor: pointer;
+.summaryDivider {
+  width: 1px;
+  align-self: stretch;
+  background: $border-subtle;
+}
 
-  &:hover {
-    background: t.$color-accent-soft;
-  }
+.summaryStat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.summaryLabel {
+  @include label-caps;
+}
+
+.summaryValue {
+  font-size: $fs-table;
+  color: $text-label;
+}
+
+.summarySpacer {
+  flex-grow: 1;
+}
+
+.summaryNote {
+  max-width: 260px;
+  text-align: right;
+  font-size: $fs-small;
+  color: $text-muted;
+  line-height: $lh-body;
+}
+
+// --- tables ----------------------------------------------------------------------
+
+.tables {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-6;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+.tablePanel {
+  @include card;
+
+  padding: $space-6;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tableAside {
+  font-size: $fs-small;
+  color: $text-secondary;
 }

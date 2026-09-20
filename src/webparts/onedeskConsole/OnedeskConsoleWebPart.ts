@@ -15,11 +15,6 @@ export interface IOnedeskConsoleWebPartProps {
   simulatedScope: string;
 }
 
-// Brand typeface (Josefin Sans, headings only - see styles/_tokens.scss
-// $font-display) isn't a system font and must be loaded explicitly.
-const THEME_FONTS_URL = 'https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap';
-const THEME_FONTS_LINK_ID = 'onedesk-console-theme-fonts';
-
 export default class OnedeskConsoleWebPart extends BaseClientSideWebPart<IOnedeskConsoleWebPartProps> {
 
   public render(): void {
@@ -37,21 +32,6 @@ export default class OnedeskConsoleWebPart extends BaseClientSideWebPart<IOnedes
 
     const element = React.createElement(OnedeskConsole, props);
     ReactDom.render(element, this.domElement);
-  }
-
-  protected onInit(): Promise<void> {
-    this.loadThemeFonts();
-    return Promise.resolve();
-  }
-
-  /** Loads Josefin Sans once per page, however many instances of this web part are on it. */
-  private loadThemeFonts(): void {
-    if (document.getElementById(THEME_FONTS_LINK_ID)) return;
-    const link = document.createElement('link');
-    link.id = THEME_FONTS_LINK_ID;
-    link.rel = 'stylesheet';
-    link.href = THEME_FONTS_URL;
-    document.head.appendChild(link);
   }
 
   protected onDispose(): void {

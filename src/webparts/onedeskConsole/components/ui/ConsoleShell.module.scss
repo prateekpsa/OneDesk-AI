@@ -1,0 +1,83 @@
+@import '../../styles/tokens';
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+// The single place `odc-tokens` is included. Everything inside .shell inherits
+// the custom properties; nothing outside it is touched, which matters because
+// this web part renders inside a SharePoint page that has its own styles.
+.shell {
+  @include odc-tokens;
+
+  display: flex;
+  flex-direction: column;
+  min-width: 960px; // below this the queue table scrolls horizontally instead
+  min-height: 100%;
+  background: $canvas;
+  color: $text;
+  font-family: $font-body;
+  font-size: $fs-body;
+  line-height: $lh-body;
+  -webkit-font-smoothing: antialiased;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  // One focus treatment for the whole console. :focus-visible means keyboard
+  // users get the ring and mouse users do not, without any JS.
+  :focus-visible {
+    @include focus-ring;
+  }
+
+  a {
+    color: $action;
+    text-decoration: none;
+
+    &:hover {
+      color: $action-hover;
+      text-decoration: underline;
+    }
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  // SharePoint's page styles set heading margins we do not want inherited.
+  h1,
+  h2,
+  h3,
+  p {
+    margin: 0;
+  }
+}
+
+// Same scrollbar in every pane, table and textarea.
+.shell,
+.shell * {
+  @include scrollbar;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// Full-height layout for a Single Part App Page, where the web part owns the
+// viewport. In a normal web part zone the shell sizes to its content instead.
+.fullHeight {
+  height: 100%;
+  overflow: hidden;
+}

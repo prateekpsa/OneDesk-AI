@@ -1,0 +1,42 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+  text-align: center;
+}
+
+.inline {
+  padding: $space-5 0;
+}
+
+.panel {
+  padding: $space-9 $space-5;
+  border: 1px dashed $border-dashed;
+  border-radius: $radius-panel;
+  background: $surface-empty;
+}
+
+.icon {
+  color: $icon-decorative;
+}
+
+.title {
+  font-size: $fs-table;
+  font-weight: 700;
+  color: $text-label;
+}
+
+.description {
+  max-width: 340px;
+  font-size: $fs-small;
+  color: $text-secondary;
+  line-height: $lh-body;
+}
+
+.action {
+  margin-top: $space-1;
+}

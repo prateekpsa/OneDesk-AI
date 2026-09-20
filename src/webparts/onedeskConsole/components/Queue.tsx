@@ -4,12 +4,28 @@ import type { IOneDeskDataService } from '../services/IOneDeskDataService';
 import type { ITicket } from '../models/ITicket';
 import { TICKET_STATUS } from '../services/config';
 import { useAutoRefresh } from '../hooks/useAutoRefresh';
-import SlaPill from './SlaPill';
+import { getSlaState, slaLabel } from '../utils/slaHelpers';
+import {
+  PageHeader,
+  Select,
+  SearchInput,
+  IconButton,
+  DataTable,
+  IDataTableColumn,
+  MonoCell,
+  TruncatedCell,
+  StatusPill,
+  PriorityPill,
+  SlaPill,
+  EmptyState,
+  StatusBanner,
+  TicketStatus,
+  TicketPriority,
+} from './ui';
 
 const REFRESH_MS = 15000;
 const ALL_STATUSES = 'All';
 const STATUS_OPTIONS = [
-  ALL_STATUSES,
   TICKET_STATUS.NEW,
   TICKET_STATUS.ASSIGNED,
   TICKET_STATUS.IN_PROGRESS,
@@ -58,65 +74,98 @@ const Queue: React.FC<IQueueProps> = ({ service, team, onSelectTicket }) => {
     return [...filtered].sort((a, b) => lastModified(b) - lastModified(a));
   }, [tickets, search]);
 
+  const columns: Array<IDataTableColumn<ITicket>> = [
+    {
+      key: 'number',
+      header: 'Ticket #',
+      width: '152px',
+      isRowHeader: true,
+      render: (t) => <MonoCell>{t.TicketNumber}</MonoCell>,
+    },
+    {
+      key: 'subject',
+      header: 'Subject',
+      width: 'auto',
+      render: (t) => <TruncatedCell title={t.Title}>{t.Title}</TruncatedCell>,
+    },
+    {
+      key: 'department',
+      header: 'Department',
+      width: '120px',
+      hidden: !!team,
+      render: (t) => t.CurrentOwnerTeam,
+    },
+    {
+      key: 'priority',
+      header: 'Priority',
+      width: '92px',
+      render: (t) => <PriorityPill priority={t.Priority as TicketPriority} />,
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      width: '176px',
+      render: (t) => <StatusPill status={t.Status as TicketStatus} />,
+    },
+    {
+      key: 'sla',
+      header: 'SLA',
+      width: '108px',
+      render: (t) => <SlaPill state={getSlaState(t)} label={slaLabel(t)} />,
+    },
+    {
+      key: 'requester',
+      header: 'Requester',
+      width: '200px',
+      render: (t) => <TruncatedCell title={t.RequesterEmail}>{t.RequesterEmail}</TruncatedCell>,
+    },
+    {
+      key: 'assignedTo',
+      header: 'Assigned to',
+      width: '160px',
+      render: (t) => t.AssignedTo || '—',
+    },
+  ];
+
   return (
-    <section>
-      <div className={styles.filters}>
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-          {STATUS_OPTIONS.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-        <input
-          type="search"
-          placeholder="Search ticket # or subject..."
+    <section className={styles.queue}>
+      <PageHeader title="Queue" subtitle={`${team ? `${team} desk` : 'All departments'} · sorted by most recently updated`} />
+
+      <div className={styles.toolbar}>
+        <SearchInput
+          className={styles.search}
+          label="Search ticket # or subject"
+          placeholder="Ticket number or subject"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        <Select
+          className={styles.statusSelect}
+          label="Status"
+          labelHidden
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          options={STATUS_OPTIONS.map((s) => ({ value: s, label: s }))}
+          placeholderOption={`All statuses`}
+        />
+        <div className={styles.toolbarSpacer} />
+        <span className={styles.autoRefresh}>Auto-refresh every 15s</span>
+        <IconButton icon="refresh" label="Refresh the queue" size="md" onClick={refetch} />
       </div>
 
-      {error && <p className={styles.error}>Error: {error}</p>}
-      {loading && <p>Loading...</p>}
+      {error && <StatusBanner tone="danger">{error}</StatusBanner>}
 
-      {!loading && !error && (
-        <div className={styles.tableScroll}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Ticket #</th>
-                <th>Subject</th>
-                {!team && <th>Department</th>}
-                <th>Status</th>
-                <th>Priority</th>
-                <th>SLA</th>
-                <th>Requester</th>
-                <th>Assigned to</th>
-              </tr>
-            </thead>
-            <tbody>
-              {visibleTickets.map((t) => (
-                <tr key={t.Id} className={styles.row} onClick={() => onSelectTicket(t.TicketNumber)}>
-                  <td>{t.TicketNumber}</td>
-                  <td>{t.Title}</td>
-                  {!team && <td>{t.CurrentOwnerTeam}</td>}
-                  <td>{t.Status}</td>
-                  <td>{t.Priority}</td>
-                  <td>
-                    <SlaPill ticket={t} />
-                  </td>
-                  <td>{t.RequesterEmail}</td>
-                  <td>{t.AssignedTo || '-'}</td>
-                </tr>
-              ))}
-              {visibleTickets.length === 0 && (
-                <tr>
-                  <td colSpan={team ? 7 : 8}>No tickets match.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+      {!error && (
+        <DataTable
+          caption={`Queue, ${visibleTickets.length} tickets`}
+          columns={columns}
+          rows={visibleTickets}
+          rowKey={(t) => t.TicketNumber}
+          onRowSelect={(t) => onSelectTicket(t.TicketNumber)}
+          loading={loading}
+          empty={<EmptyState title="No tickets match" description="Try clearing the status filter or search." />}
+          footer={<span>Showing {visibleTickets.length} tickets · closed tickets stay visible and read-only</span>}
+        />
       )}
     </section>
   );

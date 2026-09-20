@@ -1,0 +1,132 @@
+// =============================================================================
+// OneDesk console — shared mixins
+// =============================================================================
+// Emits no CSS until used. Import alongside _vars.scss in any module:
+//
+//   @import '../../styles/vars';
+//   @import '../../styles/mixins';
+// -----------------------------------------------------------------------------
+
+// The shape every input, select and button share. Height and radius come from
+// tokens so a density change is a token change, not a search-and-replace.
+@mixin control-base {
+  height: $control-h;
+  padding: 0 $space-5;
+  border: 1px solid $border-strong;
+  border-radius: $radius-control;
+  background: $surface;
+  color: $text;
+  font-family: $font-body;
+  font-size: $fs-body;
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+// Text inputs need the caret to sit on the text baseline, not the box centre.
+@mixin field-base {
+  @include control-base;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:hover:not(:disabled):not([readonly]) {
+    border-color: $action-text;
+  }
+
+  &:disabled {
+    background: $surface-sunken;
+    color: $text-muted;
+    cursor: not-allowed;
+  }
+}
+
+@mixin card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-card;
+  box-shadow: $shadow-card;
+}
+
+// Uppercase section and column labels.
+@mixin label-caps {
+  font-size: $fs-caps;
+  font-weight: 700;
+  letter-spacing: $tracking-caps;
+  text-transform: uppercase;
+  color: $text-caps;
+}
+
+@mixin heading-display($size: $fs-card) {
+  margin: 0;
+  font-family: $font-display;
+  font-size: $size;
+  font-weight: 700;
+  line-height: $lh-tight;
+  color: $text;
+}
+
+@mixin truncate {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Visible to screen readers, not to the eye. Used for labels on controls whose
+// purpose is obvious visually (a search box with a magnifier) but which still
+// need a programmatic name.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
+}
+
+@mixin focus-ring {
+  outline: $focus-width solid $focus;
+  outline-offset: $focus-offset;
+}
+
+// The console's scrollbar. Applied once by the shell to every descendant so
+// panes, tables and textareas all scroll the same way.
+@mixin scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: $scrollbar-thumb transparent;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $scrollbar-thumb;
+    border: 2px solid $surface;
+    border-radius: $radius-pill;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: $scrollbar-thumb-hover;
+  }
+}
+
+// A single row of a grid-driven table. The column template comes from the
+// --odc-table-cols custom property the DataTable sets per instance.
+@mixin table-row($height: $row-h) {
+  display: grid;
+  grid-template-columns: var(--odc-table-cols);
+  gap: $space-5;
+  align-items: center;
+  height: $height;
+  padding: 0 $space-7;
+  box-sizing: border-box;
+}

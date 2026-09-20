@@ -1,0 +1,108 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  padding: $space-5 $space-6;
+  border: 1px solid transparent;
+  border-radius: $radius-panel;
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  min-width: 0;
+}
+
+.title {
+  font-size: $fs-table;
+  font-weight: 700;
+}
+
+.text {
+  font-size: $fs-table;
+  line-height: $lh-body;
+}
+
+.action {
+  margin-top: $space-1;
+}
+
+.info {
+  background: $info-bg;
+  border-color: $info-border;
+  color: $neutral-text;
+
+  .icon {
+    color: $info-text;
+  }
+}
+
+.success {
+  background: $success-bg;
+  border-color: $success-border;
+  color: $success-text;
+
+  .icon {
+    color: $success-text;
+  }
+}
+
+.warn {
+  background: $warn-bg;
+  border-color: $warn-border;
+  color: $warn-strong;
+
+  .icon {
+    color: $warn-text;
+  }
+}
+
+.danger {
+  background: $danger-bg;
+  border-color: $danger-border;
+  color: $danger-ink;
+
+  .icon {
+    color: $danger-text;
+  }
+}
+
+.muted {
+  background: $muted-bg;
+  border-color: $muted-border;
+  color: $text-secondary;
+
+  .icon {
+    color: $muted-text;
+  }
+
+  .title {
+    color: $text-label;
+  }
+}
+
+// Filled is for the confirmation after a write lands, and nothing else.
+.filled {
+  &.success {
+    background: $success-text;
+    border-color: $success-text;
+    color: $text-on-fill;
+
+    .icon {
+      color: $text-on-fill;
+    }
+
+    .text {
+      font-weight: 600;
+    }
+  }
+}

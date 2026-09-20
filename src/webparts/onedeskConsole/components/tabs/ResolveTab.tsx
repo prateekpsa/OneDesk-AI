@@ -4,6 +4,7 @@ import type { IOneDeskDataService } from '../../services/IOneDeskDataService';
 import type { ITicket } from '../../models/ITicket';
 import type { IUserRole } from '../../models/IUserRole';
 import { TICKET_STATUS } from '../../services/config';
+import { TextArea, Checkbox, Button, StatusBanner } from '../ui';
 
 export interface IResolveTabProps {
   service: IOneDeskDataService;
@@ -53,29 +54,31 @@ const ResolveTab: React.FC<IResolveTabProps> = ({ service, ticket, role, onDone 
 
   return (
     <div className={styles.tab}>
-      {awaitingConfirmation && <p className={styles.message}>Already awaiting employee confirmation. Submitting will resend it.</p>}
+      <StatusBanner tone="info">
+        This does not close the ticket. It goes to {ticket.RequesterName} in Teams to confirm the fix — only their &quot;yes&quot;
+        closes it.
+      </StatusBanner>
 
-      <label>
-        Root cause (required)
-        <textarea value={rootCause} onChange={(e) => setRootCause(e.target.value)} rows={2} />
-      </label>
-      <label>
-        Resolution (required)
-        <textarea value={resolution} onChange={(e) => setResolution(e.target.value)} rows={2} />
-      </label>
-      <label>
-        Reusable as knowledge article?
-        <select value={reusableKnowledge} onChange={(e) => setReusableKnowledge(e.target.value)}>
-          <option value="No">No</option>
-          <option value="Yes">Yes</option>
-        </select>
-      </label>
+      {awaitingConfirmation && (
+        <StatusBanner tone="warn">Already awaiting employee confirmation. Submitting will resend it.</StatusBanner>
+      )}
 
-      <button disabled={!canSubmit} onClick={submit}>
-        Resolve &amp; send for confirmation
-      </button>
+      <TextArea label="Root cause" required value={rootCause} onChange={(e) => setRootCause(e.target.value)} rows={3} />
+      <TextArea label="What you did" required value={resolution} onChange={(e) => setResolution(e.target.value)} rows={4} />
+      <Checkbox
+        label="Would this help someone else?"
+        hint="A draft article is written for review. Nothing is published until a reviewer approves it."
+        checked={reusableKnowledge === 'Yes'}
+        onChange={(checked) => setReusableKnowledge(checked ? 'Yes' : 'No')}
+      />
 
-      {message && <p className={styles.message}>{message}</p>}
+      <div className={styles.actions}>
+        <Button variant="primary" size="lg" fullWidth disabled={!canSubmit} busy={submitting} onClick={submit}>
+          Send to the employee to confirm
+        </Button>
+      </div>
+
+      {message && <StatusBanner tone="info">{message}</StatusBanner>}
     </div>
   );
 };

@@ -1,43 +1,235 @@
-@use '../styles/tokens' as t;
+@import '../styles/vars';
+@import '../styles/mixins';
 
-.error {
-  color: t.$color-danger;
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: $space-7;
+  min-height: 0;
+  flex: 1 1 auto;
 }
 
+.loading {
+  color: $text-secondary;
+  margin: 0;
+}
+
+.refreshedAt {
+  font-size: $fs-small;
+  color: $text-secondary;
+  white-space: nowrap;
+}
+
+// --- tiles -------------------------------------------------------------------
+
 .tiles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: t.$space-3;
-  margin-bottom: t.$space-5;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: $space-6;
 }
 
 .tile {
-  flex: 1 1 140px;
-  background: t.$color-surface;
-  border: 1px solid t.$color-line-strong;
-  border-radius: t.$radius;
-  box-shadow: t.$shadow-sm;
-  padding: t.$space-3;
-  text-align: center;
+  @include card;
+
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding: $space-7;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+
+  &:hover {
+    background: $surface-hover;
+  }
 }
 
 .tileDanger {
-  border-color: t.$color-danger;
-  background: t.$color-danger-soft;
-}
+  background: $danger-bg;
+  border-color: $danger-border;
 
-.tileValue {
-  font-family: t.$font-display;
-  font-size: 28px;
-  font-weight: 600;
+  &:hover {
+    background: $danger-bg;
+  }
+
+  .tileLabel {
+    color: $danger-strong;
+  }
+
+  .tileValue {
+    color: $danger-text;
+  }
+
+  .tileCaption {
+    color: $danger-strong;
+    font-weight: 600;
+  }
 }
 
 .tileLabel {
-  color: t.$color-muted;
-  font-size: 12px;
+  @include label-caps;
 }
 
-.sectionHeading {
-  font-family: t.$font-display;
-  margin-top: t.$space-5;
+.tileValue {
+  font-family: $font-display;
+  font-size: $fs-metric;
+  font-weight: 700;
+  line-height: $lh-tight;
+  color: $text;
+}
+
+.tileCaption {
+  font-size: $fs-small;
+  color: $text-secondary;
+}
+
+// --- body: needs-attention + sidebar ------------------------------------------
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 372px;
+  gap: $space-7;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.needsAttention {
+  @include card;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-5;
+  padding: $space-6 $space-7 $space-5;
+}
+
+.panelTitleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.panelTitle {
+  @include heading-display($fs-card);
+}
+
+.panelSubtitle {
+  font-size: $fs-small;
+  color: $text-secondary;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: $space-7;
+  min-height: 0;
+}
+
+.panel {
+  @include card;
+
+  padding: $space-7;
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+// --- knowledge drafts ----------------------------------------------------------
+
+.draftList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.draftItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: $space-5 $space-6;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-panel;
+  background: $surface-subtle;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+
+  &:hover {
+    background: $surface-hover;
+  }
+}
+
+.draftTitle {
+  font-size: $fs-table;
+  font-weight: 600;
+  color: $text;
+}
+
+.draftMeta {
+  font-size: $fs-small;
+  color: $text-secondary;
+}
+
+// --- committees ------------------------------------------------------------
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-3;
+}
+
+.divider {
+  height: 1px;
+  background: $border-subtle;
+}
+
+.committeeDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.committeeName {
+  font-size: $fs-table;
+  font-weight: 600;
+  color: $text;
+}
+
+.committeeContact {
+  font-size: $fs-small;
+  color: $text-secondary;
+  line-height: $lh-body;
+}
+
+// --- admin adds ----------------------------------------------------------------
+
+.adminAddsList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.adminAddsItem {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+  font-size: $fs-small;
+  color: $text-label;
+  line-height: $lh-body;
+}
+
+.adminAddsIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: $success-text;
 }

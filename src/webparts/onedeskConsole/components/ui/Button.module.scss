@@ -1,0 +1,141 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-3;
+  height: $control-h;
+  padding: 0 $space-7;
+  border: 1px solid transparent;
+  border-radius: $radius-control;
+  font-size: $fs-body;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color $duration $easing, border-color $duration $easing,
+    color $duration $easing;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.label {
+  // Keeps a long label from pushing the icons apart mid-transition.
+  display: inline-block;
+}
+
+// --- variants --------------------------------------------------------------
+
+.primary {
+  background: $action;
+  border-color: $action;
+  color: $text-on-fill;
+
+  &:hover:not(:disabled) {
+    background: $action-hover;
+    border-color: $action-hover;
+  }
+
+  &:active:not(:disabled) {
+    background: $action-active;
+    border-color: $action-active;
+  }
+
+  &:disabled {
+    background: $surface-sunken;
+    border-color: $border;
+    color: $text-muted;
+  }
+}
+
+.secondary {
+  background: $surface;
+  border-color: $border-strong;
+  color: $neutral-text;
+
+  &:hover:not(:disabled) {
+    background: $surface-subtle;
+    border-color: $action-text;
+    color: $action-text;
+  }
+
+  &:disabled {
+    background: $surface-sunken;
+    border-color: $border;
+    color: $text-muted;
+  }
+}
+
+.quiet {
+  background: transparent;
+  border-color: transparent;
+  color: $action;
+  padding: 0 $space-5;
+
+  &:hover:not(:disabled) {
+    background: $action-tint;
+    color: $action-text;
+  }
+
+  &:disabled {
+    color: $text-muted;
+  }
+}
+
+// Outlined, not filled: a destructive action should be readable as dangerous
+// without dominating the screen it sits on.
+.danger {
+  background: $surface;
+  border-color: $danger-border;
+  color: $danger-text;
+
+  &:hover:not(:disabled) {
+    background: $danger-bg;
+  }
+
+  &:disabled {
+    background: $surface-sunken;
+    border-color: $border;
+    color: $text-muted;
+  }
+}
+
+// --- sizes -----------------------------------------------------------------
+
+.sm {
+  height: $control-h-sm;
+  padding: 0 $space-5;
+  font-size: $fs-table;
+}
+
+.md {
+  height: $control-h;
+}
+
+.lg {
+  height: $control-h-lg;
+  padding: 0 $space-8;
+  font-size: 13.5px;
+}
+
+.fullWidth {
+  display: flex;
+  width: 100%;
+}
+
+.iconOnly {
+  width: $control-h;
+  padding: 0;
+  flex-shrink: 0;
+
+  &.sm {
+    width: $control-h-sm;
+  }
+
+  &.lg {
+    width: $control-h-lg;
+  }
+}

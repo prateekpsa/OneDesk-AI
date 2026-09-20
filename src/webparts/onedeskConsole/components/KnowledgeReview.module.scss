@@ -1,88 +1,258 @@
-@use '../styles/tokens' as t;
+@import '../styles/vars';
+@import '../styles/mixins';
 
 .review {
   display: flex;
-  gap: t.$space-5;
-  font-family: t.$font-body;
-  color: t.$color-ink;
+  flex-direction: column;
+  gap: $space-6;
+  min-height: 0;
 }
 
-.error {
-  color: t.$color-danger;
+.loading {
+  color: $text-secondary;
+  margin: 0;
 }
 
-.sectionHeading {
-  font-family: t.$font-display;
-  margin-top: 0;
+.body {
+  display: grid;
+  grid-template-columns: 324px minmax(0, 1fr);
+  gap: $space-6;
+  align-items: start;
 }
 
-.list {
-  flex: 0 0 220px;
+// --- drafts list --------------------------------------------------------------
 
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-}
+.listPanel {
+  @include card;
 
-.item,
-.itemActive {
-  padding: t.$space-2;
-  border-radius: t.$radius-sm;
-  cursor: pointer;
-}
-
-.item:hover {
-  background: t.$color-accent-soft;
-}
-
-.itemActive {
-  background: t.$color-accent;
-  color: t.$color-surface;
-}
-
-.form {
-  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: t.$space-2;
-  max-width: 480px;
+  overflow: hidden;
+}
 
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
-    color: t.$color-muted;
-  }
+.listHeader {
+  padding: $space-5 $space-5 $space-4;
+  border-bottom: 1px solid $border;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
 
-  input,
-  textarea {
-    font: inherit;
-    padding: t.$space-1 t.$space-2;
-    border: 1px solid t.$color-line-strong;
-    border-radius: t.$radius-sm;
-    color: t.$color-ink;
-  }
+.listTitle {
+  @include heading-display($fs-card);
+}
 
-  button {
-    align-self: flex-start;
-    font: inherit;
-    background: t.$color-accent;
-    color: t.$color-surface;
-    border: none;
-    border-radius: t.$radius-sm;
-    padding: t.$space-1 t.$space-3;
-    cursor: pointer;
+.draftScroll {
+  @include scrollbar;
 
-    &:disabled {
-      background: t.$color-line-strong;
-      cursor: not-allowed;
-    }
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.draftCard {
+  text-align: left;
+  padding: $space-5;
+  border-radius: $radius-panel;
+  border: 1px solid $border;
+  background: $surface;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  align-items: flex-start;
+
+  &:hover {
+    background: $surface-hover;
   }
 }
 
-.message {
-  font-size: 13px;
+.draftCardActive {
+  border-color: $action-tint-border;
+  background: $action-tint;
+
+  &:hover {
+    background: $action-tint;
+  }
+}
+
+.draftCardLocked {
+  border-color: $warn-border;
+  background: $warn-bg;
+
+  &:hover {
+    background: $warn-bg;
+  }
+}
+
+.draftTitle {
+  font-size: $fs-table;
+  font-weight: 700;
+  color: $text;
+  line-height: $lh-tight;
+}
+
+.draftMeta {
+  font-size: $fs-small;
+  color: $text-secondary;
+}
+
+// --- draft form -----------------------------------------------------------------
+
+.formPanel {
+  @include card;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.formEmpty {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-9;
+}
+
+.formHeader {
+  padding: $space-6 $space-7 $space-5;
+  border-bottom: 1px solid $border;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-6;
+}
+
+.formHeaderText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.formTitle {
+  @include heading-display($fs-section);
+}
+
+.formMeta {
+  font-size: $fs-small;
+  color: $text-secondary;
+}
+
+.ticketRef {
+  font-family: $font-mono;
+  color: $text;
+}
+
+.formHeaderPills {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  flex-shrink: 0;
+}
+
+.formBody {
+  @include scrollbar;
+
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: $space-7;
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.formRow2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-6;
+}
+
+// --- keyword editor --------------------------------------------------------------
+
+.keywordRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-3;
+}
+
+.keywordChip {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  height: $pill-h-lg;
+  padding: 0 $space-2 0 $space-5;
+  border-radius: $radius-pill;
+  background: $action-tint;
+  color: $action-text;
+  font-size: $fs-small;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.keywordRemove {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-pill;
+
+  &:hover {
+    background: $action-tint-strong;
+  }
+}
+
+.keywordInput {
+  flex-grow: 1;
+  min-width: 180px;
+  height: $pill-h-lg;
+  padding: 0 $space-5;
+  border-radius: $radius-pill;
+  border: 1px dashed $border-dashed;
+  background: $surface;
+  color: $text;
+  font-family: $font-body;
+  font-size: $fs-small;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+// --- footer -----------------------------------------------------------------------
+
+.formFooter {
+  flex-shrink: 0;
+  padding: $space-5 $space-7;
+  border-top: 1px solid $border;
+  background: $surface-footer;
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+}
+
+.footerNote {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  font-size: $fs-small;
+  color: $text-secondary;
+  min-width: 0;
+}
+
+.footerSpacer {
+  flex-grow: 1;
+}
+
+.formMessage {
+  padding: 0 $space-7 $space-6;
 }

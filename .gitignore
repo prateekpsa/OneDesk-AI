@@ -18,3 +18,7 @@ npm-debug.log*
 
 # Planning doc (local reference only, not shared)
 build_plan.md
+claude.md
+design-reference*
+*design-reference
+HOW-TO-BUILD-SCREENS.md

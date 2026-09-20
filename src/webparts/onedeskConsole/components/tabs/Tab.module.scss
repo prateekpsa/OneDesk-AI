@@ -1,48 +1,27 @@
-@use '../../styles/tokens' as t;
+@import '../../styles/vars';
+@import '../../styles/mixins';
 
 .tab {
   display: flex;
   flex-direction: column;
-  gap: t.$space-2;
-  max-width: 480px;
-  margin-bottom: t.$space-4;
-
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
-    color: t.$color-muted;
-  }
-
-  input,
-  select,
-  textarea {
-    font: inherit;
-    padding: t.$space-1 t.$space-2;
-    border: 1px solid t.$color-line-strong;
-    border-radius: t.$radius-sm;
-    color: t.$color-ink;
-  }
-
-  button {
-    align-self: flex-start;
-    font: inherit;
-    background: t.$color-accent;
-    color: t.$color-surface;
-    border: none;
-    border-radius: t.$radius-sm;
-    padding: t.$space-1 t.$space-3;
-    cursor: pointer;
-
-    &:disabled {
-      background: t.$color-line-strong;
-      cursor: not-allowed;
-    }
-  }
+  gap: $space-5;
 }
 
-.message {
-  color: t.$color-ink;
-  font-size: 13px;
+.description {
+  margin: 0;
+  font-size: $fs-table;
+  line-height: $lh-body;
+  color: $text-secondary;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+}
+
+.hintCenter {
+  font-size: $fs-small;
+  color: $text-muted;
+  text-align: center;
 }

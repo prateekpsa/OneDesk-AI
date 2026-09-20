@@ -1,0 +1,122 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  min-width: 0;
+}
+
+.label {
+  font-size: $fs-small;
+  font-weight: 600;
+  color: $text-label;
+}
+
+.required {
+  color: $danger-text;
+  font-weight: 600;
+}
+
+.visuallyHidden {
+  @include visually-hidden;
+}
+
+.hint {
+  font-size: 11px;
+  color: $text-muted;
+  line-height: 1.45;
+}
+
+.error {
+  font-size: $fs-small;
+  color: $danger-text;
+  line-height: 1.45;
+}
+
+.counterRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-5;
+}
+
+.counter {
+  font-size: 11px;
+  color: $text-muted;
+  margin-left: auto;
+}
+
+// --- the control itself ------------------------------------------------------
+
+.control {
+  @include field-base;
+
+  width: 100%;
+}
+
+.hasError {
+  border-color: $field-error-border;
+  background: $field-error-bg;
+}
+
+.textarea {
+  height: auto;
+  padding: $space-4 $space-5;
+  line-height: $lh-body;
+  resize: vertical;
+}
+
+// --- select ------------------------------------------------------------------
+
+.selectWrap {
+  position: relative;
+  display: flex;
+  min-width: 0;
+}
+
+.select {
+  padding-right: 34px;
+  appearance: none;
+  // Firefox keeps a focus ring inside the control; the shell's ring is enough.
+  &::-moz-focus-inner {
+    border: 0;
+  }
+}
+
+.selectChevron {
+  position: absolute;
+  top: 50%;
+  right: $space-5;
+  transform: translateY(-50%);
+  color: $text-muted;
+  pointer-events: none;
+}
+
+// --- search ------------------------------------------------------------------
+
+.searchWrap {
+  position: relative;
+  display: flex;
+  min-width: 0;
+}
+
+.search {
+  padding-left: 34px;
+
+  // Safari draws its own clear button that ignores our type scale.
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button {
+    appearance: none;
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: $space-5;
+  transform: translateY(-50%);
+  color: $text-muted;
+  pointer-events: none;
+}

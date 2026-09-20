@@ -1,80 +1,301 @@
-@use '../styles/tokens' as t;
+@import '../styles/vars';
+@import '../styles/mixins';
 
 .detail {
-  font-family: t.$font-body;
-  color: t.$color-ink;
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
 }
 
-.back {
-  font: inherit;
-  background: none;
-  border: none;
-  color: t.$color-accent;
-  cursor: pointer;
-  padding: 0;
-  margin-bottom: t.$space-3;
-}
-
-.header {
+.breadcrumb {
   display: flex;
   align-items: center;
-  gap: t.$space-2;
+  gap: $space-4;
 }
 
-.heading {
-  font-family: t.$font-display;
+.scopeText {
+  font-size: $fs-small;
+  color: $icon-decorative;
+}
+
+.loading {
+  color: $text-secondary;
   margin: 0;
 }
 
-.meta {
-  color: t.$color-muted;
+// --- header card -------------------------------------------------------------
+
+.headerCard {
+  @include card;
+
+  padding: $space-8 $space-9;
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+.headerTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-8;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  min-width: 0;
+}
+
+.ticketNumber {
+  font-family: $font-mono;
+  font-size: $fs-table;
+  color: $text-secondary;
+  letter-spacing: 0.02em;
+}
+
+.title {
+  margin: 0;
+  font-family: $font-display;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: $lh-tight;
+  color: $text;
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  flex-shrink: 0;
+}
+
+.divider {
+  height: 1px;
+  background: $border-subtle;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: $space-7;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.metaLabel {
+  @include label-caps;
+}
+
+.metaPrimary {
+  font-size: $fs-table;
+  color: $text;
+}
+
+.metaSecondary {
+  font-size: $fs-small;
+  color: $text-secondary;
+}
+
+.metaDanger {
+  color: $danger-text;
+  font-weight: 600;
+}
+
+// --- body: main + action panel ------------------------------------------------
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 404px;
+  gap: $space-7;
+  align-items: start;
+}
+
+.bodyNoAside {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: $space-7;
+  min-width: 0;
+}
+
+.panel {
+  @include card;
+
+  padding: $space-8 $space-9;
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
 }
 
 .description {
-  background: t.$color-surface;
-  border: 1px solid t.$color-line;
-  border-radius: t.$radius;
-  padding: t.$space-3;
+  margin: 0;
+  font-size: $fs-body;
+  line-height: $lh-prose;
+  color: $text-label;
 }
 
-.error {
-  color: t.$color-danger;
+.panelNote {
+  font-size: $fs-small;
+  color: $text-secondary;
+  font-weight: 400;
+}
+
+// --- concerned people ----------------------------------------------------------
+
+.participantList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.participantRow {
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+  padding: $space-5 $space-6;
+  border-radius: $radius-panel;
+  background: $surface-subtle;
+  border: 1px solid $border-subtle;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: $radius-pill;
+  background: $action-tint-strong;
+  color: $action-text;
+  font-size: $fs-small;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.participantInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.participantName {
+  font-size: $fs-table;
+  font-weight: 600;
+  color: $text;
+}
+
+.participantMeta {
+  font-size: $fs-small;
+  color: $text-secondary;
+}
+
+// --- history timeline ----------------------------------------------------------
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.timelineRow {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: $space-5;
+}
+
+.timelineRail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timelineDot {
+  width: 9px;
+  height: 9px;
+  border-radius: $radius-pill;
+  background: $action;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.timelineLine {
+  width: 2px;
+  flex-grow: 1;
+  background: $border-subtle;
+}
+
+.timelineContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: $space-7;
+}
+
+.timelineHeadline {
+  font-size: $fs-table;
+  font-weight: 600;
+  color: $text;
+}
+
+.timelineMeta {
+  font-size: $fs-small;
+  color: $text-secondary;
+}
+
+// --- action panel ------------------------------------------------------------
+
+.actionPanel {
+  @include card;
+
+  display: flex;
+  flex-direction: column;
+  padding: $space-7 $space-8 $space-8;
+  gap: $space-5;
+}
+
+.actionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-5;
+}
+
+.actionTitle {
+  @include heading-display($fs-card);
 }
 
 .tabs {
   display: flex;
-  gap: t.$space-2;
-  margin: t.$space-4 0 t.$space-3;
+  gap: $space-6;
+  border-bottom: 1px solid $border;
+}
 
-  button {
-    font: inherit;
-    background: t.$color-surface;
-    border: 1px solid t.$color-line-strong;
-    border-radius: t.$radius-sm;
-    padding: t.$space-1 t.$space-3;
-    cursor: pointer;
-  }
+.tabButton {
+  border-radius: $radius-control $radius-control 0 0;
+  color: $text-secondary;
 }
 
 .tabActive {
-  background: t.$color-accent !important;
-  color: t.$color-surface;
-  border-color: t.$color-accent !important;
+  color: $action-text;
+  font-weight: 700;
+  box-shadow: inset 0 -2px 0 0 $action;
+
+  &:hover:not(:disabled) {
+    color: $action-text;
+  }
 }
 
 .tabPanel {
-  margin-bottom: t.$space-4;
-}
-
-.readOnlyBanner {
-  background: t.$color-line;
-  color: t.$color-muted;
-  border-radius: t.$radius-sm;
-  padding: t.$space-2 t.$space-3;
-  margin: t.$space-4 0;
-}
-
-.sectionHeading {
-  font-family: t.$font-display;
-  margin-top: t.$space-5;
+  padding-top: $space-3;
 }

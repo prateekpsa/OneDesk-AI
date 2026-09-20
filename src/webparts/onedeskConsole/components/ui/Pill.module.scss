@@ -1,0 +1,115 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  height: $pill-h;
+  padding: 0 $space-3;
+  border: 1px solid transparent;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: $radius-pill;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+// --- shape -----------------------------------------------------------------
+
+.shapePill {
+  border-radius: $radius-pill;
+}
+
+.shapeChip {
+  border-radius: $radius-sm;
+  font-weight: 700;
+}
+
+// --- size ------------------------------------------------------------------
+
+.sm {
+  height: $pill-h;
+}
+
+.md {
+  height: $pill-h-lg;
+  padding: 0 $space-4;
+  font-size: $fs-small;
+}
+
+// --- tones -----------------------------------------------------------------
+
+.neutral {
+  background: $neutral-bg;
+  color: $neutral-text;
+
+  &.outlined {
+    border-color: $neutral-border;
+  }
+}
+
+.action {
+  background: $action-tint;
+  color: $action-text;
+
+  &.outlined {
+    border-color: $action-tint-border;
+  }
+}
+
+.info {
+  background: $info-bg;
+  color: $info-text;
+
+  &.outlined {
+    border-color: $info-border;
+  }
+}
+
+.success {
+  background: $success-bg;
+  color: $success-text;
+
+  &.outlined {
+    border-color: $success-border;
+  }
+}
+
+.warn {
+  background: $warn-bg;
+  color: $warn-text;
+
+  &.outlined {
+    border-color: $warn-border;
+  }
+}
+
+.danger {
+  background: $danger-bg;
+  color: $danger-text;
+  font-weight: 700;
+
+  &.outlined {
+    border-color: $danger-border;
+  }
+}
+
+.muted {
+  background: $muted-bg;
+  color: $muted-text;
+
+  &.outlined {
+    border-color: $muted-border;
+  }
+}

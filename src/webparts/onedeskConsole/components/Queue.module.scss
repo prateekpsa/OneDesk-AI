@@ -1,58 +1,37 @@
-@use '../styles/tokens' as t;
+@import '../styles/vars';
+@import '../styles/mixins';
 
-.filters {
+.queue {
   display: flex;
-  gap: t.$space-2;
-  margin-bottom: t.$space-3;
-
-  select,
-  input {
-    font: inherit;
-    padding: t.$space-1 t.$space-2;
-    border: 1px solid t.$color-line-strong;
-    border-radius: t.$radius-sm;
-  }
-
-  input {
-    flex: 1 1 240px;
-  }
+  flex-direction: column;
+  gap: $space-6;
+  min-height: 0;
+  flex: 1 1 auto;
 }
 
-.error {
-  color: t.$color-danger;
+.toolbar {
+  @include card;
+
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+  padding: $space-5;
 }
 
-.tableScroll {
-  width: 100%;
-  overflow-x: auto;
+.search {
+  flex: 0 0 300px;
 }
 
-.table {
-  width: 100%;
-  min-width: 640px;
-  border-collapse: collapse;
-
-  th,
-  td {
-    text-align: left;
-    padding: t.$space-2;
-    border-bottom: 1px solid t.$color-line;
-    max-width: 220px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  th {
-    color: t.$color-muted;
-    font-weight: 600;
-  }
+.statusSelect {
+  flex: 0 0 190px;
 }
 
-.row {
-  cursor: pointer;
+.toolbarSpacer {
+  flex: 1 1 auto;
+}
 
-  &:hover {
-    background: t.$color-accent-soft;
-  }
+.autoRefresh {
+  font-size: $fs-small;
+  color: $text-secondary;
+  white-space: nowrap;
 }

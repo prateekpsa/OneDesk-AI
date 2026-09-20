@@ -3,7 +3,19 @@ import styles from './SharedWithMe.module.scss';
 import type { IOneDeskDataService } from '../../services/IOneDeskDataService';
 import type { ITicket } from '../../models/ITicket';
 import { normalizeEmail } from '../../services/config';
-import SlaPill from '../SlaPill';
+import { getSlaState, slaLabel } from '../../utils/slaHelpers';
+import {
+  PageHeader,
+  DataTable,
+  IDataTableColumn,
+  MonoCell,
+  TruncatedCell,
+  StatusPill,
+  SlaPill,
+  EmptyState,
+  StatusBanner,
+  TicketStatus,
+} from '../ui';
 
 export interface ISharedWithMeProps {
   service: IOneDeskDataService;
@@ -56,45 +68,33 @@ const SharedWithMe: React.FC<ISharedWithMeProps> = ({ service, email, onSelectTi
     };
   }, [service, email]);
 
-  if (error) return <p className={styles.error}>Error: {error}</p>;
-  if (loading) return <p>Loading...</p>;
+  const columns: Array<IDataTableColumn<IRow>> = [
+    { key: 'number', header: 'Ticket #', width: '152px', isRowHeader: true, render: ({ ticket }) => <MonoCell>{ticket.TicketNumber}</MonoCell> },
+    { key: 'subject', header: 'Subject', width: 'auto', render: ({ ticket }) => <TruncatedCell title={ticket.Title}>{ticket.Title}</TruncatedCell> },
+    { key: 'status', header: 'Status', width: '176px', render: ({ ticket }) => <StatusPill status={ticket.Status as TicketStatus} audience="employee" /> },
+    { key: 'sla', header: 'SLA', width: '108px', render: ({ ticket }) => <SlaPill state={getSlaState(ticket)} label={slaLabel(ticket)} /> },
+    { key: 'requester', header: 'Raised by', width: '200px', render: ({ ticket }) => <TruncatedCell title={ticket.RequesterEmail}>{ticket.RequesterEmail}</TruncatedCell> },
+    { key: 'role', header: 'Your role', width: '120px', render: ({ role }) => role },
+  ];
 
   return (
-    <section>
-      <h3 className={styles.heading}>Shared with me</h3>
-      <div className={styles.tableScroll}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Ticket #</th>
-              <th>Subject</th>
-              <th>Status</th>
-              <th>SLA</th>
-              <th>Raised by</th>
-              <th>Your role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map(({ ticket, role }) => (
-              <tr key={ticket.Id} className={styles.row} onClick={() => onSelectTicket(ticket.TicketNumber)}>
-                <td>{ticket.TicketNumber}</td>
-                <td>{ticket.Title}</td>
-                <td>{ticket.Status}</td>
-                <td>
-                  <SlaPill ticket={ticket} />
-                </td>
-                <td>{ticket.RequesterEmail}</td>
-                <td>{role}</td>
-              </tr>
-            ))}
-            {rows.length === 0 && (
-              <tr>
-                <td colSpan={6}>Nothing has been shared with you yet.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+    <section className={styles.sharedWithMe}>
+      <PageHeader title="Shared with me" subtitle="Tickets you were added to as a concerned person. Read-only, for your awareness." />
+
+      {error && <StatusBanner tone="danger">{error}</StatusBanner>}
+
+      {!error && (
+        <DataTable
+          caption={`Shared with me, ${rows.length} tickets`}
+          columns={columns}
+          rows={rows}
+          rowKey={(r) => r.ticket.TicketNumber}
+          onRowSelect={(r) => onSelectTicket(r.ticket.TicketNumber)}
+          loading={loading}
+          empty={<EmptyState title="Nothing has been shared with you yet" />}
+          footer={<span>{rows.length} ticket{rows.length === 1 ? '' : 's'} · you will stop seeing one only if the desk removes you from it.</span>}
+        />
+      )}
     </section>
   );
 };

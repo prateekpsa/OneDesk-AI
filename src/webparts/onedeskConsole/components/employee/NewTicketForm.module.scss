@@ -1,52 +1,219 @@
-@use '../../styles/tokens' as t;
+@import '../../styles/vars';
+@import '../../styles/mixins';
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: t.$space-2;
-  max-width: 480px;
-  font-family: t.$font-body;
-  color: t.$color-ink;
+  gap: $space-6;
+}
 
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
-    color: t.$color-muted;
-  }
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 372px;
+  gap: $space-6;
+  align-items: start;
+}
 
-  select,
-  textarea {
-    font: inherit;
-    padding: t.$space-1 t.$space-2;
-    border: 1px solid t.$color-line-strong;
-    border-radius: t.$radius-sm;
-    color: t.$color-ink;
-  }
+.formCard {
+  @include card;
 
-  button {
-    align-self: flex-start;
-    font: inherit;
-    background: t.$color-accent;
-    color: t.$color-surface;
-    border: none;
-    border-radius: t.$radius-sm;
-    padding: t.$space-1 t.$space-3;
-    cursor: pointer;
+  padding: $space-7 $space-8 $space-8;
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
 
-    &:disabled {
-      background: t.$color-line-strong;
-      cursor: not-allowed;
-    }
+.row2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-6;
+}
+
+// --- priority cards -----------------------------------------------------------
+
+.priorityFieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.priorityLegend {
+  padding: 0;
+  font-size: $fs-small;
+  font-weight: 600;
+  color: $text-label;
+}
+
+.priorityGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: $space-4;
+}
+
+.priorityCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: $space-5 $space-6;
+  border-radius: $radius-panel;
+  border: 1px solid $border;
+  background: $surface;
+  cursor: pointer;
+
+  &:hover {
+    background: $surface-hover;
   }
 }
 
-.heading {
-  font-family: t.$font-display;
-  margin-top: 0;
+.priorityCardActive {
+  border-color: $action-tint-border;
+  background: $action-tint;
+
+  &:hover {
+    background: $action-tint;
+  }
 }
 
-.message {
-  font-size: 13px;
+.priorityTop {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.priorityRadio {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: $action;
+  flex-shrink: 0;
+}
+
+.priorityLabel {
+  font-size: $fs-body;
+  font-weight: 600;
+  color: $text;
+}
+
+.priorityHint {
+  font-size: $fs-small;
+  color: $text-secondary;
+  line-height: $lh-body;
+}
+
+// --- footer -----------------------------------------------------------------
+
+.divider {
+  height: 1px;
+  background: $border-subtle;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+}
+
+.footerNote {
+  font-size: $fs-small;
+  color: $text-secondary;
+}
+
+.footerSpacer {
+  flex-grow: 1;
+}
+
+// --- sidebar ------------------------------------------------------------------
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.panel {
+  @include card;
+
+  padding: $space-6;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.panelTitleWithIcon {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.panelNote {
+  margin: 0;
+  font-size: $fs-small;
+  color: $text-secondary;
+  line-height: $lh-body;
+}
+
+.panelFootnote {
+  font-size: $fs-small;
+  color: $text-muted;
+  line-height: $lh-body;
+}
+
+.suggestionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: $space-5;
+  border-radius: $radius-panel;
+  background: $surface-subtle;
+  border: 1px solid $border-subtle;
+}
+
+.suggestionTitle {
+  font-size: $fs-body;
+  font-weight: 600;
+  color: $text;
+}
+
+.suggestionDesc {
+  font-size: $fs-small;
+  color: $text-secondary;
+  line-height: $lh-body;
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+}
+
+.stepNum {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: $radius-pill;
+  background: $action-tint;
+  color: $action-text;
+  font-size: $fs-small;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepText {
+  font-size: $fs-small;
+  color: $text-label;
+  line-height: $lh-body;
 }

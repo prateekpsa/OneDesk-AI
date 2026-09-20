@@ -1,0 +1,180 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.frame {
+  @include card;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+// The scroll container. Vertical scrolling keeps the header pinned; horizontal
+// scrolling is what saves the queue when the web part zone is narrow — columns
+// keep their widths instead of crushing.
+.scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: $fs-table;
+}
+
+.caption {
+  @include visually-hidden;
+}
+
+.headCell {
+  @include label-caps;
+
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
+  height: $table-head-h;
+  padding: 0 $space-5;
+  text-align: left;
+  background: $surface-subtle;
+  border-bottom: 1px solid $border;
+  // A sticky cell's own background is all that hides the scrolling rows.
+  background-clip: padding-box;
+
+  &:first-child {
+    padding-left: $space-7;
+  }
+
+  &:last-child {
+    padding-right: $space-7;
+  }
+}
+
+.row {
+  border-bottom: 1px solid $border-subtle;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:nth-child(even) {
+    background: $surface-hover;
+  }
+}
+
+.selectable {
+  cursor: pointer;
+
+  &:hover {
+    background: $action-tint;
+  }
+}
+
+.selected {
+  background: $action-tint;
+
+  // The one place a left rule is used: it marks which row the detail pane is
+  // showing, and it has to survive the zebra striping.
+  td:first-child,
+  th:first-child {
+    box-shadow: inset 3px 0 0 0 $action;
+  }
+}
+
+.cell {
+  height: $row-h;
+  padding: 0 $space-5;
+  color: $text;
+  text-align: left;
+  font-weight: 400;
+  vertical-align: middle;
+
+  &:first-child {
+    padding-left: $space-7;
+  }
+
+  &:last-child {
+    padding-right: $space-7;
+  }
+}
+
+.rowHeaderCell {
+  color: $neutral-text;
+}
+
+.alignEnd {
+  text-align: right;
+}
+
+// `.compact` sets nothing visual — the base .cell height above already is the
+// compact height — but the class must exist (a custom property is enough to
+// stop Sass from dropping an empty rule) so `styles[density]` type-checks for
+// both values.
+.compact {
+  --odc-density: compact;
+}
+
+.comfortable .cell {
+  height: $row-h-comfortable;
+}
+
+// The activation target inside the row header cell. Styled as plain text —
+// the whole row already reads as clickable — but it is a real button, so it
+// is reachable by keyboard and announced as one.
+.rowButton {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+.mono {
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  color: $neutral-text;
+}
+
+.truncate {
+  @include truncate;
+
+  display: block;
+}
+
+.mutedText {
+  color: $text-secondary;
+}
+
+.emptyCell {
+  padding: $space-9 $space-7;
+  text-align: center;
+}
+
+.skeleton {
+  display: block;
+  height: 12px;
+  border-radius: $radius-pill;
+  background: $surface-sunken;
+}
+
+.footer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+  min-height: 46px;
+  padding: 0 $space-7;
+  border-top: 1px solid $border;
+  background: $surface-footer;
+  font-size: $fs-small;
+  color: $text-secondary;
+}

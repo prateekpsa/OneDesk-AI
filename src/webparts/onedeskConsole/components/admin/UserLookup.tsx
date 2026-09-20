@@ -2,46 +2,49 @@ import * as React from 'react';
 import styles from './UserLookup.module.scss';
 import type { IOneDeskDataService } from '../../services/IOneDeskDataService';
 import type { ITicket } from '../../models/ITicket';
-import { deriveRole } from '../../services/config';
-import SlaPill from '../SlaPill';
+import { deriveRole, normalizeEmail } from '../../services/config';
+import {
+  PageHeader,
+  SectionHeading,
+  SearchInput,
+  Button,
+  Pill,
+  DataTable,
+  IDataTableColumn,
+  MonoCell,
+  TruncatedCell,
+  StatusPill,
+  EmptyState,
+  StatusBanner,
+  TicketStatus,
+} from '../ui';
 
 export interface IUserLookupProps {
   service: IOneDeskDataService;
   onSelectTicket: (ticketNumber: string) => void;
 }
 
+interface ISharedRow {
+  ticket: ITicket;
+  addedBy?: string;
+}
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function ticketTable(tickets: ITicket[], emptyText: string, onSelectTicket: (ticketNumber: string) => void): JSX.Element {
-  return (
-    <table className={styles.table}>
-      <thead>
-        <tr>
-          <th>Ticket #</th>
-          <th>Subject</th>
-          <th>Status</th>
-          <th>SLA</th>
-        </tr>
-      </thead>
-      <tbody>
-        {tickets.map((t) => (
-          <tr key={t.Id} className={styles.row} onClick={() => onSelectTicket(t.TicketNumber)}>
-            <td>{t.TicketNumber}</td>
-            <td>{t.Title}</td>
-            <td>{t.Status}</td>
-            <td>
-              <SlaPill ticket={t} />
-            </td>
-          </tr>
-        ))}
-        {tickets.length === 0 && (
-          <tr>
-            <td colSpan={4}>{emptyText}</td>
-          </tr>
-        )}
-      </tbody>
-    </table>
-  );
+function raisedColumns(onSelectTicket: (ticketNumber: string) => void): Array<IDataTableColumn<ITicket>> {
+  return [
+    { key: 'number', header: 'Ticket #', width: '152px', isRowHeader: true, render: (t) => <MonoCell>{t.TicketNumber}</MonoCell> },
+    { key: 'subject', header: 'Subject', width: 'auto', render: (t) => <TruncatedCell title={t.Title}>{t.Title}</TruncatedCell> },
+    { key: 'status', header: 'Status', width: '96px', render: (t) => <StatusPill status={t.Status as TicketStatus} /> },
+  ];
+}
+
+function sharedColumns(onSelectTicket: (ticketNumber: string) => void): Array<IDataTableColumn<ISharedRow>> {
+  return [
+    { key: 'number', header: 'Ticket #', width: '152px', isRowHeader: true, render: (r) => <MonoCell>{r.ticket.TicketNumber}</MonoCell> },
+    { key: 'subject', header: 'Subject', width: 'auto', render: (r) => <TruncatedCell title={r.ticket.Title}>{r.ticket.Title}</TruncatedCell> },
+    { key: 'addedBy', header: 'Added by', width: '150px', render: (r) => <TruncatedCell title={r.addedBy}>{r.addedBy || '—'}</TruncatedCell> },
+  ];
 }
 
 /** Phase 5 (build_plan.md), admin only - look up any person's department/role and their tickets. */
@@ -50,8 +53,12 @@ const UserLookup: React.FC<IUserLookupProps> = ({ service, onSelectTicket }) => 
   const [searching, setSearching] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [scopeLabel, setScopeLabel] = React.useState<string | undefined>(undefined);
+  const [searchedEmail, setSearchedEmail] = React.useState<string>('');
   const [raised, setRaised] = React.useState<ITicket[] | undefined>(undefined);
-  const [shared, setShared] = React.useState<ITicket[] | undefined>(undefined);
+  const [shared, setShared] = React.useState<ISharedRow[] | undefined>(undefined);
+
+  const raisedCols = React.useMemo(() => raisedColumns(onSelectTicket), [onSelectTicket]);
+  const sharedCols = React.useMemo(() => sharedColumns(onSelectTicket), [onSelectTicket]);
 
   const search = (): void => {
     const trimmed = email.trim();
@@ -66,52 +73,95 @@ const UserLookup: React.FC<IUserLookupProps> = ({ service, onSelectTicket }) => 
     setShared(undefined);
 
     Promise.all([service.getCallerProfile(trimmed), service.getTickets({ requesterEmail: trimmed }), service.getTicketsForParticipant(trimmed)])
-      .then(([profile, raisedTickets, sharedTickets]) => {
+      .then(async ([profile, raisedTickets, participantTickets]) => {
         const role = deriveRole(profile.userScope);
-        setScopeLabel(
-          role.kind === 'admin'
-            ? 'Super Admin'
-            : role.kind === 'staff'
-            ? `${role.team} team`
-            : 'Not in StaffDirectory - treated as an employee'
-        );
+        setScopeLabel(role.kind === 'admin' ? 'Super admin' : role.kind === 'staff' ? `${role.team} team` : 'User — no desk');
+        setSearchedEmail(trimmed);
         setRaised(raisedTickets);
-        setShared(sharedTickets.filter((t) => t.RequesterEmail.toLowerCase() !== trimmed.toLowerCase()));
+
+        const sharedTickets = participantTickets.filter((t) => normalizeEmail(t.RequesterEmail) !== normalizeEmail(trimmed));
+        const sharedRows = await Promise.all(
+          sharedTickets.map(async (ticket): Promise<ISharedRow> => {
+            const participants = await service.getParticipants(ticket.TicketNumber);
+            const mine = participants.find((p) => normalizeEmail(p.Email) === normalizeEmail(trimmed));
+            return { ticket, addedBy: mine?.AddedBy };
+          })
+        );
+        setShared(sharedRows);
       })
       .catch((err: Error) => setError(err.message || 'Lookup failed.'))
       .finally(() => setSearching(false));
   };
 
   return (
-    <section>
-      <h3 className={styles.heading}>User lookup</h3>
+    <section className={styles.userLookup}>
+      <PageHeader title="User lookup" subtitle={'Answer "what has this person raised, and what can they see?" without opening SharePoint.'} />
 
       <div className={styles.searchRow}>
-        <input
-          type="email"
+        <SearchInput
+          className={styles.searchInput}
+          label="Work email"
           placeholder="person@preferredsquare.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && search()}
         />
-        <button disabled={searching} onClick={search}>
+        <Button variant="primary" busy={searching} onClick={search}>
           Search
-        </button>
+        </Button>
       </div>
 
-      {error && <p className={styles.error}>{error}</p>}
+      {error && <StatusBanner tone="danger">{error}</StatusBanner>}
 
-      {scopeLabel && (
+      {scopeLabel && raised && shared && (
         <>
-          <p className={styles.card}>
-            <strong>{email.trim()}</strong> — {scopeLabel}
-          </p>
+          <div className={styles.summaryCard}>
+            <div className={styles.summaryIdentity}>
+              <span className={styles.summaryEmail}>{searchedEmail}</span>
+            </div>
+            <div className={styles.summaryDivider} />
+            <div className={styles.summaryStat}>
+              <span className={styles.summaryLabel}>Scope</span>
+              <Pill tone="neutral">{scopeLabel}</Pill>
+            </div>
+            <div className={styles.summaryStat}>
+              <span className={styles.summaryLabel}>Raised</span>
+              <span className={styles.summaryValue}>{raised.length} tickets</span>
+            </div>
+            <div className={styles.summaryStat}>
+              <span className={styles.summaryLabel}>Shared with them</span>
+              <span className={styles.summaryValue}>{shared.length} tickets</span>
+            </div>
+            <div className={styles.summarySpacer} />
+            <span className={styles.summaryNote}>Scope comes from StaffDirectory. Changing it is a SharePoint task, not a console one.</span>
+          </div>
 
-          <h4 className={styles.sectionHeading}>Raised by this person</h4>
-          {raised && ticketTable(raised, 'No tickets found for that address.', onSelectTicket)}
+          <div className={styles.tables}>
+            <section className={styles.tablePanel}>
+              <SectionHeading aside={<span className={styles.tableAside}>Newest first</span>}>Raised by this person</SectionHeading>
+              <DataTable
+                caption={`Raised by ${searchedEmail}`}
+                columns={raisedCols}
+                rows={raised}
+                rowKey={(t) => t.TicketNumber}
+                onRowSelect={(t) => onSelectTicket(t.TicketNumber)}
+                empty={<EmptyState title="No tickets found for that address" />}
+              />
+            </section>
 
-          <h4 className={styles.sectionHeading}>Shared with this person</h4>
-          {shared && ticketTable(shared, 'Nothing has been shared with this person.', onSelectTicket)}
+            <section className={styles.tablePanel}>
+              <SectionHeading aside={<span className={styles.tableAside}>Added as a concerned person</span>}>Shared with this person</SectionHeading>
+              <DataTable
+                caption={`Shared with ${searchedEmail}`}
+                columns={sharedCols}
+                rows={shared}
+                rowKey={(r) => r.ticket.TicketNumber}
+                onRowSelect={(r) => onSelectTicket(r.ticket.TicketNumber)}
+                empty={<EmptyState title="Nothing has been shared with this person" />}
+                footer={<span>Concerned people can read these tickets. They cannot act on them.</span>}
+              />
+            </section>
+          </div>
         </>
       )}
     </section>

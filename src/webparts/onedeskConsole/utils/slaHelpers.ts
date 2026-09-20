@@ -1,7 +1,8 @@
 import { ITicket } from '../models/ITicket';
 import { TICKET_STATUS, SLA_HOURS_BY_PRIORITY } from '../services/config';
+import type { SlaState } from '../components/ui/statusTone';
 
-export type SlaState = 'closed' | 'breached' | 'warning' | 'ontrack' | 'unknown';
+export type { SlaState };
 
 /** Fraction of a priority's SLA window, counted back from the due time, that counts as "close to breaching". */
 const WARNING_BUFFER_FRACTION = 0.25;
@@ -28,6 +29,19 @@ export function getSlaState(ticket: ITicket): SlaState {
   if (isTerminal(ticket.Status)) return 'closed';
   if (!ticket.SLADueDateTime) return 'unknown';
   if (isBreached(ticket)) return 'breached';
-  if (isCloseToBreaching(ticket)) return 'warning';
-  return 'ontrack';
+  if (isCloseToBreaching(ticket)) return 'dueSoon';
+  return 'onTrack';
+}
+
+const SLA_LABEL: Record<SlaState, string> = {
+  closed: 'Closed',
+  breached: 'SLA breached',
+  dueSoon: 'Due soon',
+  onTrack: 'On track',
+  unknown: 'No SLA'
+};
+
+/** The text that goes with getSlaState()'s tone — passed to the kit's <SlaPill label>. */
+export function slaLabel(ticket: ITicket): string {
+  return SLA_LABEL[getSlaState(ticket)];
 }

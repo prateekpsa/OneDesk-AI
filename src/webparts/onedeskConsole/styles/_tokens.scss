@@ -1,79 +1,201 @@
-// ============================================================================
-// onedesk-console design tokens — THE single root for colors/spacing/type.
-// Edit values here to re-theme the whole console; nothing else needs to change.
-// Every component's ComponentName.module.scss pulls from this file via:
-//   @use '../styles/tokens' as t;
-// then references tokens as t.$color-accent, t.$radius, etc.
+// =============================================================================
+// OneDesk console — design tokens
+// =============================================================================
+// Every token in the console is declared here, once, inside the `odc-tokens`
+// mixin. Importing this file emits nothing; only `@include odc-tokens` does,
+// and exactly one stylesheet does that: components/ui/ConsoleShell.module.scss.
 //
-// Colors below are Preferred Square's actual brand palette (PS Brand
-// Guidelines.pdf, "Colour Palette" page) - not placeholders. Primary colors:
-// #25635C, #01C6B2, #D0F7F0, #05304D, #F11576, #F9F5AA. Secondary (tints):
-// #266B78, #2BB3A0, #BEF4EA, #CCC, #FFF, #000.
-// ============================================================================
+// Including it a second time would duplicate every custom property in that
+// module's output. Component stylesheets read the values through
+// styles/_vars.scss instead, which also emits nothing.
+//
+// Tokens are CSS custom properties rather than Sass variables on purpose: they
+// resolve at runtime, so a single wrapper class themes everything beneath it,
+// and a future "compact density" or per-department accent needs one class, not
+// a rebuild.
+// -----------------------------------------------------------------------------
 
-// Leading underscore marks this a Sass "partial" - it compiles nothing on its
-// own, only when @use'd from a component's .module.scss.
+// Josefin Sans is the Preferred Square display face. It is NOT loaded here.
+// Pick one of the two options in README.md before shipping:
+//   1. Bundle the woff2 files and uncomment the @font-face blocks below.
+//   2. Do nothing — the stack falls back to Segoe UI, SharePoint's own face.
+// Do not add a fonts.googleapis.com <link>: it is an external request from
+// inside SharePoint and a tenant CSP or proxy can block it silently.
+//
+// @font-face {
+//   font-family: 'Josefin Sans';
+//   font-style: normal;
+//   font-weight: 400;
+//   font-display: swap;
+//   src: url('../assets/fonts/JosefinSans-Regular.woff2') format('woff2');
+// }
+// @font-face {
+//   font-family: 'Josefin Sans';
+//   font-style: normal;
+//   font-weight: 700;
+//   font-display: swap;
+//   src: url('../assets/fonts/JosefinSans-Bold.woff2') format('woff2');
+// }
 
-// Brand palette (exact hex values from the guidelines, kept as named
-// constants so every semantic token below traces back to an official color).
-$brand-dark-green: #25635c; // primary - dominant brand color per the guidelines
-$brand-teal: #01c6b2; // primary - vivid teal
-$brand-mint: #d0f7f0; // primary - pale mint tint
-$brand-navy: #05304d; // primary - dark navy
-$brand-pink: #f11576; // primary - accent/highlight
-$brand-yellow: #f9f5aa; // primary - pale yellow accent
-$brand-teal-blue: #266b78; // secondary - tint
-$brand-teal-mid: #2bb3a0; // secondary - tint
-$brand-mint-pale: #bef4ea; // secondary - tint
-$brand-grey: #cccccc; // secondary
-$brand-white: #ffffff; // secondary
-$brand-black: #000000; // secondary
+@mixin odc-tokens {
+  // ---------------------------------------------------------------------------
+  // Surfaces
+  // ---------------------------------------------------------------------------
+  --odc-canvas: #eef4f4; // the page behind the cards
+  --odc-surface: #ffffff; // cards, tables, panels
+  --odc-surface-subtle: #f7fafa; // table headers, inset blocks
+  --odc-surface-sunken: #f1f6f6; // segmented-control track, skeletons
+  --odc-surface-hover: #f7fbfb; // zebra striping and row hover
+  --odc-surface-footer: #fafcfc; // table footers, sticky action bars
 
-// Semantic colors - what components actually reference. Re-point these at
-// different $brand-* values to re-theme without touching component code.
-$color-ink: $brand-navy; // primary text
-$color-muted: $brand-teal-blue; // secondary text
-$color-canvas: $brand-mint; // page/app background
-$color-surface: $brand-white; // card/panel background
-$color-line: $brand-mint-pale; // borders/dividers
-$color-line-strong: $brand-grey;
+  // ---------------------------------------------------------------------------
+  // Lines
+  // ---------------------------------------------------------------------------
+  --odc-border: #e1eaeb; // card and table outlines
+  --odc-border-strong: #c9dbdb; // control outlines — needs to read as clickable
+  --odc-border-subtle: #edf3f3; // row separators, internal dividers
 
-$color-accent: $brand-teal; // primary brand/action color (buttons, links, active states)
-$color-accent-soft: $brand-mint; // accent tint for backgrounds/badges
-$color-highlight: $brand-pink; // secondary accent for callouts/emphasis (not a status color)
-$color-highlight-soft: $brand-yellow;
+  // ---------------------------------------------------------------------------
+  // Text — every value below is >= 4.5:1 on --odc-surface
+  // ---------------------------------------------------------------------------
+  // Ratios below are the WORST case across every surface each token lands on
+  // (white, canvas, the sunken grey and the table footer), not the flattering
+  // one against white. scripts/contrast-check re-verifies them; see README.
+  --odc-text: #102a33; // 14.9:1
+  --odc-text-secondary: #4d6a74; // 5.6:1 — supporting copy
+  --odc-text-muted: #59737e; // 4.5:1 — hints, timestamps, the smallest type
+  --odc-text-caps: #54727c; // 4.8:1 — uppercase column and section labels
+  --odc-text-label: #3c5a64; // 7.4:1 — form labels and resting nav items
+  --odc-text-on-fill: #ffffff; // 6.9:1 on --odc-action
 
-// Status colors (SLA pills, ticket status badges) are conventional
-// green/amber/red rather than brand colors - a "breached SLA" pill needs to
-// read as red at a glance regardless of brand palette, so these are NOT
-// drawn from $brand-* above.
-$color-success: #2c8a5a;
-$color-success-soft: #e4f2ea;
-$color-warning: #b8860b;
-$color-warning-soft: #fbf1d9;
-$color-danger: #b23b3b;
-$color-danger-soft: #f7e7e7;
+  // Non-text colours. These carry no information on their own, so they are
+  // exempt from the 4.5:1 rule — but they still belong here, not inline.
+  --odc-icon-decorative: #9fb3b9; // empty-state glyphs
+  --odc-border-dashed: #cfdfe0; // empty-state and "add a keyword" outlines
+  --odc-surface-empty: #f9fcfc; // the ground inside an empty panel
+  --odc-scrollbar-thumb: #c3d6d7;
+  --odc-scrollbar-thumb-hover: #a4bfc1;
 
-// Typography - per the guidelines: Josefin Sans is the primary typeface
-// (headlines/short subheadings; Light weight for headlines; Bold is
-// reserved for the brandmark only, never body/headline text). Helvetica is
-// the secondary typeface, used for all body/secondary copy. Josefin Sans
-// isn't a system font - it must be loaded (e.g. Google Fonts) wherever
-// $font-display is used, see OnedeskConsoleWebPart.ts's loadThemeFonts().
-$font-display: 'Josefin Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; // headings only
-$font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif; // body copy, forms, tables
-$font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  // ---------------------------------------------------------------------------
+  // Action — Preferred Square deep green. The only "do it" colour.
+  // ---------------------------------------------------------------------------
+  --odc-action: #25635c;
+  --odc-action-hover: #1c4e48;
+  --odc-action-active: #163f3a;
+  --odc-action-text: #1b4e47; // the action colour as text on a tint
+  --odc-action-tint: #e4f4f1; // active nav, selected rows, accent chips
+  --odc-action-tint-strong: #d0f7f0; // avatars, brand moments
+  --odc-action-tint-border: #c6e7e0;
 
-// Spacing scale (use instead of ad-hoc px values so spacing stays consistent)
-$space-1: 4px;
-$space-2: 8px;
-$space-3: 12px;
-$space-4: 16px;
-$space-5: 24px;
-$space-6: 32px;
+  // Focus lives on the brand teal so it never reads as an error. Brand #01c6b2
+  // is only 2.1:1 against white and would be an invisible focus ring, so this
+  // is the same hue taken down to a compliant 3.7:1.
+  --odc-focus: #019684;
+  --odc-focus-width: 2px;
+  --odc-focus-offset: 2px;
 
-// Shape/elevation
-$radius: 8px;
-$radius-sm: 4px;
-$shadow-sm: 0 1px 2px rgba(20, 34, 60, 0.06);
-$shadow-md: 0 6px 18px rgba(20, 34, 60, 0.08);
+  // ---------------------------------------------------------------------------
+  // Status tones — bg / border / text, used by Pill and StatusBanner
+  // ---------------------------------------------------------------------------
+  // Danger doubles as the SLA-breach tone. Brand pink #f11576 fails contrast as
+  // text, so the text token is the darkened #b00d57 (5.8:1 on its own tint).
+  --odc-danger-bg: #fce6ef;
+  --odc-danger-border: #f3c6da;
+  --odc-danger-text: #b00d57;
+  --odc-danger-strong: #9a1a5c; // headings inside a danger surface
+  --odc-danger-ink: #8a0a44; // body copy inside a danger banner — 8.0:1
+  --odc-field-error-border: #d8628f;
+  --odc-field-error-bg: #fff8fb;
+
+  --odc-warn-bg: #fdf1e0;
+  --odc-warn-border: #f3ddbd;
+  --odc-warn-text: #8a5109;
+  --odc-warn-strong: #7a4708;
+
+  --odc-success-bg: #e2f3ec;
+  --odc-success-border: #c2e3d6;
+  --odc-success-text: #17624e;
+
+  --odc-info-bg: #eaf4f7;
+  --odc-info-border: #cfe4ea;
+  --odc-info-text: #2c5f6b;
+
+  --odc-neutral-bg: #f4f8f8;
+  --odc-neutral-border: #dde8e9;
+  --odc-neutral-text: #2c4a54;
+
+  --odc-muted-bg: #eef2f3; // closed / cancelled — visibly out of play
+  --odc-muted-border: #dfe7e8;
+  --odc-muted-text: #54707a;
+
+  // ---------------------------------------------------------------------------
+  // Typography
+  // ---------------------------------------------------------------------------
+  --odc-font-display: 'Josefin Sans', 'Segoe UI', 'Helvetica Neue', Helvetica, sans-serif;
+  --odc-font-body: 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, sans-serif;
+  --odc-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Courier New', monospace;
+
+  --odc-fs-page: 22px; // page title
+  --odc-fs-section: 18px; // panel title
+  --odc-fs-card: 16px; // card heading
+  --odc-fs-body: 13px; // body, buttons, inputs
+  --odc-fs-table: 12.5px; // table cells, dense copy
+  --odc-fs-small: 11.5px; // hints, meta
+  --odc-fs-caps: 10.5px; // uppercase labels
+  --odc-fs-metric: 34px; // dashboard tile numbers
+
+  --odc-lh-tight: 1.25;
+  --odc-lh-body: 1.55;
+  --odc-lh-prose: 1.65;
+  --odc-tracking-caps: 0.08em;
+
+  // ---------------------------------------------------------------------------
+  // Shape
+  // ---------------------------------------------------------------------------
+  --odc-radius-sm: 6px; // priority chips
+  --odc-radius-control: 8px; // buttons, inputs, selects
+  --odc-radius-panel: 9px; // nav items, inset blocks
+  --odc-radius-card: 12px; // cards, tables, tiles
+  --odc-radius-pill: 999px;
+
+  // ---------------------------------------------------------------------------
+  // Metrics — the numbers that make tabs feel like one product
+  // ---------------------------------------------------------------------------
+  --odc-control-h: 40px; // every button, input and select
+  --odc-control-h-lg: 44px; // primary form submits
+  --odc-control-h-sm: 32px; // pagination, in-toolbar segmented items
+  --odc-topbar-h: 64px;
+  --odc-nav-w: 232px;
+  --odc-nav-item-h: 44px;
+  --odc-table-head-h: 38px;
+  --odc-row-h: 44px; // compact density (the chosen default)
+  --odc-row-h-comfortable: 52px;
+  --odc-pill-h: 22px;
+  --odc-pill-h-lg: 26px;
+
+  --odc-space-1: 4px;
+  --odc-space-2: 6px;
+  --odc-space-3: 8px;
+  --odc-space-4: 10px;
+  --odc-space-5: 12px;
+  --odc-space-6: 14px;
+  --odc-space-7: 16px;
+  --odc-space-8: 20px;
+  --odc-space-9: 24px;
+  --odc-space-10: 32px;
+
+  // ---------------------------------------------------------------------------
+  // Depth and motion
+  // ---------------------------------------------------------------------------
+  --odc-shadow-card: 0 1px 2px rgba(16, 42, 51, 0.04);
+  --odc-shadow-raised: 0 4px 12px rgba(16, 42, 51, 0.08);
+  --odc-shadow-modal: 0 10px 28px rgba(16, 42, 51, 0.12);
+
+  --odc-duration: 120ms;
+  --odc-easing: cubic-bezier(0.2, 0, 0.2, 1);
+
+  --odc-z-sticky: 2;
+  --odc-z-overlay: 10;
+}
+
+// Reduced motion is honoured globally by the shell; see ConsoleShell.module.scss.

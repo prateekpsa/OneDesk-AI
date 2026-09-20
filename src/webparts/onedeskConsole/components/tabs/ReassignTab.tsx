@@ -4,8 +4,9 @@ import type { IOneDeskDataService } from '../../services/IOneDeskDataService';
 import type { ITicket } from '../../models/ITicket';
 import type { IUserRole } from '../../models/IUserRole';
 import { TEAM } from '../../services/config';
+import { Select, TextArea, Button, StatusBanner } from '../ui';
 
-const TEAMS = [TEAM.IT, TEAM.HR, TEAM.ADMIN, TEAM.ANALYTICS, TEAM.FINANCE, TEAM.OTHER];
+const ALL_TEAMS = [TEAM.IT, TEAM.HR, TEAM.ADMIN, TEAM.ANALYTICS, TEAM.FINANCE, TEAM.OTHER];
 
 export interface IReassignTabProps {
   service: IOneDeskDataService;
@@ -15,12 +16,21 @@ export interface IReassignTabProps {
 }
 
 const ReassignTab: React.FC<IReassignTabProps> = ({ service, ticket, role, onDone }) => {
-  const [newTeam, setNewTeam] = React.useState<string>(ticket.CurrentOwnerTeam);
+  const [newTeam, setNewTeam] = React.useState<string>('');
   const [reason, setReason] = React.useState<string>('');
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [message, setMessage] = React.useState<string | undefined>(undefined);
 
-  const canSubmit = reason.trim().length > 0 && newTeam !== ticket.CurrentOwnerTeam && !submitting;
+  // The ticket's own team can't be a reassignment target - excluded from the
+  // list rather than shown and refused at submit time.
+  const teamOptions = ALL_TEAMS.filter((t) => t !== ticket.CurrentOwnerTeam);
+  const canSubmit = newTeam.length > 0 && reason.trim().length > 0 && !submitting;
+
+  const reset = (): void => {
+    setNewTeam('');
+    setReason('');
+    setMessage(undefined);
+  };
 
   const submit = (): void => {
     setSubmitting(true);
@@ -30,6 +40,7 @@ const ReassignTab: React.FC<IReassignTabProps> = ({ service, ticket, role, onDon
       .then((result) => {
         if (result.success) {
           setMessage(`Reassigned to ${newTeam}.`);
+          setNewTeam('');
           setReason('');
           onDone();
         } else {
@@ -42,27 +53,40 @@ const ReassignTab: React.FC<IReassignTabProps> = ({ service, ticket, role, onDon
 
   return (
     <div className={styles.tab}>
-      <label>
-        New owner team
-        <select value={newTeam} onChange={(e) => setNewTeam(e.target.value)}>
-          {TEAMS.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </label>
+      <p className={styles.description}>
+        Moving a ticket changes who owns it. The status stays exactly as it is, and the new desk is posted in their Teams channel.
+      </p>
 
-      <label>
-        Reason (required)
-        <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={2} />
-      </label>
+      <Select
+        label="Move to"
+        value={newTeam}
+        onChange={(e) => setNewTeam(e.target.value)}
+        options={teamOptions.map((t) => ({ value: t, label: t }))}
+        placeholderOption="Choose a department"
+        hint={`${ticket.CurrentOwnerTeam} is not listed — a ticket cannot be moved to the desk that already owns it.`}
+      />
 
-      <button disabled={!canSubmit} onClick={submit}>
-        Reassign
-      </button>
+      <TextArea
+        label="Why is it moving?"
+        required
+        placeholder="Network hardware on 14 is managed by Facilities, not IT."
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+        rows={4}
+        hint="The reason is stored on the ticket and shown to the receiving desk."
+      />
 
-      {message && <p className={styles.message}>{message}</p>}
+      <div className={styles.actions}>
+        <Button variant="secondary" fullWidth onClick={reset} disabled={submitting}>
+          Cancel
+        </Button>
+        <Button variant="primary" fullWidth disabled={!canSubmit} busy={submitting} onClick={submit}>
+          Move ticket
+        </Button>
+      </div>
+      {!canSubmit && !submitting && <span className={styles.hintCenter}>Add a department and a reason to enable this.</span>}
+
+      {message && <StatusBanner tone="info">{message}</StatusBanner>}
     </div>
   );
 };

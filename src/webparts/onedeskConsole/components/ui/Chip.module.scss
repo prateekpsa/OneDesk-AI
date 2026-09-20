@@ -1,0 +1,32 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: $pill-h-lg;
+  padding: 0 $space-6;
+  border: 1px solid $neutral-border;
+  border-radius: $radius-pill;
+  background: $neutral-bg;
+  color: $neutral-text;
+  font-size: $fs-table;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color $duration $easing, border-color $duration $easing, color $duration $easing;
+
+  &:hover {
+    background: $surface-hover;
+    border-color: $border-strong;
+  }
+}
+
+.selected {
+  background: $action-tint;
+  border-color: $action-tint-border;
+  color: $action-text;
+
+  &:hover {
+    background: $action-tint-strong;
+  }
+}
