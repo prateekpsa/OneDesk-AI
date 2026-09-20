@@ -1,0 +1,76 @@
+@use '../../styles/tokens' as t;
+
+.heading {
+  font-family: t.$font-display;
+  margin-top: 0;
+}
+
+.searchRow {
+  display: flex;
+  gap: t.$space-2;
+  margin-bottom: t.$space-3;
+
+  input {
+    flex: 1 1 320px;
+    font: inherit;
+    padding: t.$space-1 t.$space-2;
+    border: 1px solid t.$color-line-strong;
+    border-radius: t.$radius-sm;
+  }
+
+  button {
+    font: inherit;
+    background: t.$color-accent;
+    color: t.$color-surface;
+    border: none;
+    border-radius: t.$radius-sm;
+    padding: t.$space-1 t.$space-3;
+    cursor: pointer;
+
+    &:disabled {
+      background: t.$color-line-strong;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.error {
+  color: t.$color-danger;
+}
+
+.card {
+  background: t.$color-surface;
+  border: 1px solid t.$color-line;
+  border-radius: t.$radius;
+  padding: t.$space-3;
+}
+
+.sectionHeading {
+  font-family: t.$font-display;
+  margin-top: t.$space-4;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    text-align: left;
+    padding: t.$space-2;
+    border-bottom: 1px solid t.$color-line;
+  }
+
+  th {
+    color: t.$color-muted;
+    font-weight: 600;
+  }
+}
+
+.row {
+  cursor: pointer;
+
+  &:hover {
+    background: t.$color-accent-soft;
+  }
+}

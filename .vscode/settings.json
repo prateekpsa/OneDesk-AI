@@ -1,0 +1,20 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  // Configure glob patterns for excluding files and folders in the file explorer.
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/bower_components": true,
+    "**/coverage": true,
+    "**/jest-output": true,
+    "**/lib-amd": true,
+    "src/**/*.scss.ts": true
+  },
+  "typescript.tsdk": ".\\node_modules\\typescript\\lib",
+  // SPFx 1.20 requires Node 18 (see "engines" in package.json). The machine-wide
+  // nvm symlink points at Node 24, so prepend the Node 18.20.4 install for every
+  // terminal opened in this workspace only.
+  "terminal.integrated.env.windows": {
+    "PATH": "${env:NVM_HOME}\\v18.20.4;${env:PATH}"
+  }
+}

@@ -6,6 +6,7 @@ temp/
 release/
 .heft/
 *.sppkg
+sharepoint/solution/debug/
 
 # Editor/OS
 .DS_Store

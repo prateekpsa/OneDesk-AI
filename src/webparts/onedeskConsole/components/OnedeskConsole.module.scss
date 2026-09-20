@@ -1,0 +1,99 @@
+@use '../styles/tokens' as t;
+
+.onedeskConsole {
+  padding: t.$space-4;
+  background: t.$color-canvas;
+  color: t.$color-ink;
+  font-family: t.$font-body;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: t.$space-3;
+  margin-bottom: t.$space-2;
+}
+
+.heading {
+  font-family: t.$font-display;
+  font-weight: 600;
+  margin: 0;
+}
+
+.badgeMock,
+.badgeLive {
+  font-size: 12px;
+  padding: 2px t.$space-2;
+  border-radius: t.$radius-sm;
+}
+
+.badgeMock {
+  background: t.$color-highlight-soft;
+  color: t.$color-ink;
+}
+
+.badgeLive {
+  background: t.$color-accent-soft;
+  color: t.$color-ink;
+}
+
+.identity {
+  color: t.$color-muted;
+  margin-top: 0;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: t.$space-3;
+  margin-bottom: t.$space-4;
+}
+
+.teamPicker {
+  display: flex;
+  align-items: center;
+  gap: t.$space-2;
+
+  select {
+    font: inherit;
+    padding: t.$space-1 t.$space-2;
+    border: 1px solid t.$color-line-strong;
+    border-radius: t.$radius-sm;
+  }
+}
+
+.nav {
+  display: flex;
+  gap: t.$space-2;
+
+  button {
+    font: inherit;
+    background: t.$color-surface;
+    border: 1px solid t.$color-line-strong;
+    border-radius: t.$radius-sm;
+    padding: t.$space-1 t.$space-3;
+    cursor: pointer;
+  }
+}
+
+.navActive {
+  background: t.$color-accent !important;
+  color: t.$color-surface;
+  border-color: t.$color-accent !important;
+}
+
+.error {
+  color: t.$color-danger;
+}
+
+.retry {
+  font: inherit;
+  background: none;
+  border: none;
+  color: t.$color-accent;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}

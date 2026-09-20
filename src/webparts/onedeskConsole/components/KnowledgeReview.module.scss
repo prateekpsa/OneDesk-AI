@@ -1,0 +1,88 @@
+@use '../styles/tokens' as t;
+
+.review {
+  display: flex;
+  gap: t.$space-5;
+  font-family: t.$font-body;
+  color: t.$color-ink;
+}
+
+.error {
+  color: t.$color-danger;
+}
+
+.sectionHeading {
+  font-family: t.$font-display;
+  margin-top: 0;
+}
+
+.list {
+  flex: 0 0 220px;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.item,
+.itemActive {
+  padding: t.$space-2;
+  border-radius: t.$radius-sm;
+  cursor: pointer;
+}
+
+.item:hover {
+  background: t.$color-accent-soft;
+}
+
+.itemActive {
+  background: t.$color-accent;
+  color: t.$color-surface;
+}
+
+.form {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: t.$space-2;
+  max-width: 480px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: t.$color-muted;
+  }
+
+  input,
+  textarea {
+    font: inherit;
+    padding: t.$space-1 t.$space-2;
+    border: 1px solid t.$color-line-strong;
+    border-radius: t.$radius-sm;
+    color: t.$color-ink;
+  }
+
+  button {
+    align-self: flex-start;
+    font: inherit;
+    background: t.$color-accent;
+    color: t.$color-surface;
+    border: none;
+    border-radius: t.$radius-sm;
+    padding: t.$space-1 t.$space-3;
+    cursor: pointer;
+
+    &:disabled {
+      background: t.$color-line-strong;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.message {
+  font-size: 13px;
+}

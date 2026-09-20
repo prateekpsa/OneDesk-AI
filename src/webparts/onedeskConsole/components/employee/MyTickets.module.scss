@@ -1,0 +1,35 @@
+@use '../../styles/tokens' as t;
+
+.heading {
+  font-family: t.$font-display;
+  margin-top: 0;
+}
+
+.error {
+  color: t.$color-danger;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    text-align: left;
+    padding: t.$space-2;
+    border-bottom: 1px solid t.$color-line;
+  }
+
+  th {
+    color: t.$color-muted;
+    font-weight: 600;
+  }
+}
+
+.row {
+  cursor: pointer;
+
+  &:hover {
+    background: t.$color-accent-soft;
+  }
+}

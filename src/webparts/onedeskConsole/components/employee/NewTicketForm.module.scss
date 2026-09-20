@@ -1,0 +1,52 @@
+@use '../../styles/tokens' as t;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: t.$space-2;
+  max-width: 480px;
+  font-family: t.$font-body;
+  color: t.$color-ink;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: t.$color-muted;
+  }
+
+  select,
+  textarea {
+    font: inherit;
+    padding: t.$space-1 t.$space-2;
+    border: 1px solid t.$color-line-strong;
+    border-radius: t.$radius-sm;
+    color: t.$color-ink;
+  }
+
+  button {
+    align-self: flex-start;
+    font: inherit;
+    background: t.$color-accent;
+    color: t.$color-surface;
+    border: none;
+    border-radius: t.$radius-sm;
+    padding: t.$space-1 t.$space-3;
+    cursor: pointer;
+
+    &:disabled {
+      background: t.$color-line-strong;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.heading {
+  font-family: t.$font-display;
+  margin-top: 0;
+}
+
+.message {
+  font-size: 13px;
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "onedesk-console-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/onedeskConsole/OnedeskConsoleWebPart.js",
+          "manifest": "./src/webparts/onedeskConsole/OnedeskConsoleWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "OnedeskConsoleWebPartStrings": "lib/webparts/onedeskConsole/loc/{locale}.js"
+  }
+}

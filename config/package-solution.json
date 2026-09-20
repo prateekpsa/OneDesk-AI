@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "onedesk-console-client-side-solution",
+    "id": "d2bf641d-d5ac-4e58-8cc6-688e2b29b24f",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.20.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "onedesk-console description"
+      },
+      "longDescription": {
+        "default": "onedesk-console description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "onedesk-console Feature",
+        "description": "The feature that activates elements of the onedesk-console solution.",
+        "id": "5d82cc22-640c-491e-8fa1-f6a69462b194",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/onedesk-console.sppkg"
+  }
+}

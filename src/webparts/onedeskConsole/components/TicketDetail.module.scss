@@ -1,0 +1,80 @@
+@use '../styles/tokens' as t;
+
+.detail {
+  font-family: t.$font-body;
+  color: t.$color-ink;
+}
+
+.back {
+  font: inherit;
+  background: none;
+  border: none;
+  color: t.$color-accent;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: t.$space-3;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: t.$space-2;
+}
+
+.heading {
+  font-family: t.$font-display;
+  margin: 0;
+}
+
+.meta {
+  color: t.$color-muted;
+}
+
+.description {
+  background: t.$color-surface;
+  border: 1px solid t.$color-line;
+  border-radius: t.$radius;
+  padding: t.$space-3;
+}
+
+.error {
+  color: t.$color-danger;
+}
+
+.tabs {
+  display: flex;
+  gap: t.$space-2;
+  margin: t.$space-4 0 t.$space-3;
+
+  button {
+    font: inherit;
+    background: t.$color-surface;
+    border: 1px solid t.$color-line-strong;
+    border-radius: t.$radius-sm;
+    padding: t.$space-1 t.$space-3;
+    cursor: pointer;
+  }
+}
+
+.tabActive {
+  background: t.$color-accent !important;
+  color: t.$color-surface;
+  border-color: t.$color-accent !important;
+}
+
+.tabPanel {
+  margin-bottom: t.$space-4;
+}
+
+.readOnlyBanner {
+  background: t.$color-line;
+  color: t.$color-muted;
+  border-radius: t.$radius-sm;
+  padding: t.$space-2 t.$space-3;
+  margin: t.$space-4 0;
+}
+
+.sectionHeading {
+  font-family: t.$font-display;
+  margin-top: t.$space-5;
+}

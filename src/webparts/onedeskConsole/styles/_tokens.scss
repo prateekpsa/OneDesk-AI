@@ -1,0 +1,79 @@
+// ============================================================================
+// onedesk-console design tokens — THE single root for colors/spacing/type.
+// Edit values here to re-theme the whole console; nothing else needs to change.
+// Every component's ComponentName.module.scss pulls from this file via:
+//   @use '../styles/tokens' as t;
+// then references tokens as t.$color-accent, t.$radius, etc.
+//
+// Colors below are Preferred Square's actual brand palette (PS Brand
+// Guidelines.pdf, "Colour Palette" page) - not placeholders. Primary colors:
+// #25635C, #01C6B2, #D0F7F0, #05304D, #F11576, #F9F5AA. Secondary (tints):
+// #266B78, #2BB3A0, #BEF4EA, #CCC, #FFF, #000.
+// ============================================================================
+
+// Leading underscore marks this a Sass "partial" - it compiles nothing on its
+// own, only when @use'd from a component's .module.scss.
+
+// Brand palette (exact hex values from the guidelines, kept as named
+// constants so every semantic token below traces back to an official color).
+$brand-dark-green: #25635c; // primary - dominant brand color per the guidelines
+$brand-teal: #01c6b2; // primary - vivid teal
+$brand-mint: #d0f7f0; // primary - pale mint tint
+$brand-navy: #05304d; // primary - dark navy
+$brand-pink: #f11576; // primary - accent/highlight
+$brand-yellow: #f9f5aa; // primary - pale yellow accent
+$brand-teal-blue: #266b78; // secondary - tint
+$brand-teal-mid: #2bb3a0; // secondary - tint
+$brand-mint-pale: #bef4ea; // secondary - tint
+$brand-grey: #cccccc; // secondary
+$brand-white: #ffffff; // secondary
+$brand-black: #000000; // secondary
+
+// Semantic colors - what components actually reference. Re-point these at
+// different $brand-* values to re-theme without touching component code.
+$color-ink: $brand-navy; // primary text
+$color-muted: $brand-teal-blue; // secondary text
+$color-canvas: $brand-mint; // page/app background
+$color-surface: $brand-white; // card/panel background
+$color-line: $brand-mint-pale; // borders/dividers
+$color-line-strong: $brand-grey;
+
+$color-accent: $brand-teal; // primary brand/action color (buttons, links, active states)
+$color-accent-soft: $brand-mint; // accent tint for backgrounds/badges
+$color-highlight: $brand-pink; // secondary accent for callouts/emphasis (not a status color)
+$color-highlight-soft: $brand-yellow;
+
+// Status colors (SLA pills, ticket status badges) are conventional
+// green/amber/red rather than brand colors - a "breached SLA" pill needs to
+// read as red at a glance regardless of brand palette, so these are NOT
+// drawn from $brand-* above.
+$color-success: #2c8a5a;
+$color-success-soft: #e4f2ea;
+$color-warning: #b8860b;
+$color-warning-soft: #fbf1d9;
+$color-danger: #b23b3b;
+$color-danger-soft: #f7e7e7;
+
+// Typography - per the guidelines: Josefin Sans is the primary typeface
+// (headlines/short subheadings; Light weight for headlines; Bold is
+// reserved for the brandmark only, never body/headline text). Helvetica is
+// the secondary typeface, used for all body/secondary copy. Josefin Sans
+// isn't a system font - it must be loaded (e.g. Google Fonts) wherever
+// $font-display is used, see OnedeskConsoleWebPart.ts's loadThemeFonts().
+$font-display: 'Josefin Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; // headings only
+$font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif; // body copy, forms, tables
+$font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+// Spacing scale (use instead of ad-hoc px values so spacing stays consistent)
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 24px;
+$space-6: 32px;
+
+// Shape/elevation
+$radius: 8px;
+$radius-sm: 4px;
+$shadow-sm: 0 1px 2px rgba(20, 34, 60, 0.06);
+$shadow-md: 0 6px 18px rgba(20, 34, 60, 0.08);

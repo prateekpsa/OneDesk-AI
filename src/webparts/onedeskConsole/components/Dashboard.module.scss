@@ -1,0 +1,43 @@
+@use '../styles/tokens' as t;
+
+.error {
+  color: t.$color-danger;
+}
+
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: t.$space-3;
+  margin-bottom: t.$space-5;
+}
+
+.tile {
+  flex: 1 1 140px;
+  background: t.$color-surface;
+  border: 1px solid t.$color-line-strong;
+  border-radius: t.$radius;
+  box-shadow: t.$shadow-sm;
+  padding: t.$space-3;
+  text-align: center;
+}
+
+.tileDanger {
+  border-color: t.$color-danger;
+  background: t.$color-danger-soft;
+}
+
+.tileValue {
+  font-family: t.$font-display;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.tileLabel {
+  color: t.$color-muted;
+  font-size: 12px;
+}
+
+.sectionHeading {
+  font-family: t.$font-display;
+  margin-top: t.$space-5;
+}
