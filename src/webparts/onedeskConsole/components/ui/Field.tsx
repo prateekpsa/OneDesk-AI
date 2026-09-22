@@ -50,7 +50,7 @@ export const Field: React.FunctionComponent<IFieldShellProps> = ({
       className={cx(styles.label, labelHidden && styles.visuallyHidden)}
     >
       {label}
-      {required && <span className={styles.required}> Required</span>}
+      {required && <span className={styles.required}> (Required)</span>}
     </label>
     {children}
     {error ? (

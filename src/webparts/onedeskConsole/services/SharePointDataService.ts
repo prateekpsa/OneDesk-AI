@@ -62,6 +62,11 @@ function odataLiteral(value: string): string {
   return value.replace(/'/g, "''");
 }
 
+/** `field eq 'A' or field eq 'B' or ...`, parenthesised so it composes safely with an outer `and`. */
+function odataOrEquals(field: string, values: string[]): string {
+  return '(' + values.map((v) => `${field} eq '${odataLiteral(v)}'`).join(' or ') + ')';
+}
+
 export class SharePointDataService implements IOneDeskDataService {
   private sp: SPFI;
 
@@ -74,8 +79,8 @@ export class SharePointDataService implements IOneDeskDataService {
 
   public async getTickets(filter?: ITicketFilter): Promise<ITicket[]> {
     const clauses: string[] = [];
-    if (filter?.status) clauses.push(`Status eq '${odataLiteral(filter.status)}'`);
-    if (filter?.team) clauses.push(`CurrentOwnerTeam eq '${odataLiteral(filter.team)}'`);
+    if (filter?.status && filter.status.length > 0) clauses.push(odataOrEquals('Status', filter.status));
+    if (filter?.team && filter.team.length > 0) clauses.push(odataOrEquals('CurrentOwnerTeam', filter.team));
     if (filter?.requesterEmail) clauses.push(`RequesterEmail eq '${odataLiteral(filter.requesterEmail)}'`);
 
     let query = this.sp.web.lists.getByTitle(LISTS.TICKETS).items.select(...TICKET_FIELDS).top(2000);
@@ -124,7 +129,7 @@ export class SharePointDataService implements IOneDeskDataService {
   public async getKnowledgeArticles(filter?: IKnowledgeArticleFilter): Promise<IKnowledgeArticle[]> {
     const clauses: string[] = [];
     if (filter?.articleStatus) clauses.push(`ArticleStatus eq '${odataLiteral(filter.articleStatus)}'`);
-    if (filter?.department) clauses.push(`Department eq '${odataLiteral(filter.department)}'`);
+    if (filter?.department && filter.department.length > 0) clauses.push(odataOrEquals('Department', filter.department));
 
     let query = this.sp.web.lists.getByTitle(LISTS.KNOWLEDGE_ARTICLES).items.top(1000);
     if (clauses.length) query = query.filter(clauses.join(' and '));

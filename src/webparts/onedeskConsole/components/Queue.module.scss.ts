@@ -1,12 +1,13 @@
 
 require("./Queue.module.css");
 const styles = {
-  queue: 'queue_e0cedf81',
-  toolbar: 'toolbar_e0cedf81',
-  search: 'search_e0cedf81',
-  statusSelect: 'statusSelect_e0cedf81',
-  toolbarSpacer: 'toolbarSpacer_e0cedf81',
-  autoRefresh: 'autoRefresh_e0cedf81'
+  queue: 'queue_64b9217e',
+  toolbar: 'toolbar_64b9217e',
+  search: 'search_64b9217e',
+  statusSelect: 'statusSelect_64b9217e',
+  slaSelect: 'slaSelect_64b9217e',
+  toolbarSpacer: 'toolbarSpacer_64b9217e',
+  autoRefresh: 'autoRefresh_64b9217e'
 };
 
 export default styles;

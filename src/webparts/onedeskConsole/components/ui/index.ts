@@ -65,8 +65,14 @@ export type {
   ISearchInputProps
 } from './Field';
 
+export { MultiSelect } from './MultiSelect';
+export type { IMultiSelectProps, IMultiSelectOption } from './MultiSelect';
+
 export { DataTable, MonoCell, TruncatedCell } from './DataTable';
 export type { IDataTableProps, IDataTableColumn } from './DataTable';
+
+export { BarRow } from './BarRow';
+export type { IBarRowProps } from './BarRow';
 
 export { PageHeader, SectionHeading } from './PageHeader';
 export type { IPageHeaderProps, ISectionHeadingProps } from './PageHeader';

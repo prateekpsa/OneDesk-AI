@@ -79,7 +79,7 @@ const NewTicketForm: React.FC<INewTicketFormProps> = ({ service, requesterEmail,
       return;
     }
     service
-      .getKnowledgeArticles({ articleStatus: ARTICLE_STATUS.PUBLISHED, department })
+      .getKnowledgeArticles({ articleStatus: ARTICLE_STATUS.PUBLISHED, department: [department] })
       .then(setPublishedArticles)
       .catch(() => setPublishedArticles([]));
   }, [service, department]);

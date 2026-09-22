@@ -7,6 +7,7 @@ import { MockDataService } from '../services/MockDataService';
 import { TEAM, normalizeEmail } from '../services/config';
 import { useUserRole } from '../hooks/useUserRole';
 import { useAutoRefresh } from '../hooks/useAutoRefresh';
+import { getScopedDashboardCounts } from '../utils/dashboardCounts';
 import type { IUserRole } from '../models/IUserRole';
 import {
   ConsoleShell,
@@ -14,12 +15,12 @@ import {
   SideNav,
   ISideNavGroup,
   ISideNavItem,
-  Select,
+  MultiSelect,
   Button,
   StatusBanner,
   IconName
 } from './ui';
-import Dashboard from './Dashboard';
+import Dashboard, { IDashboardDrillDown } from './Dashboard';
 import Queue from './Queue';
 import TicketDetail from './TicketDetail';
 import KnowledgeReview from './KnowledgeReview';
@@ -29,7 +30,6 @@ import SharedWithMe from './employee/SharedWithMe';
 import UserLookup from './admin/UserLookup';
 
 const TEAMS = [TEAM.IT, TEAM.HR, TEAM.ADMIN, TEAM.ANALYTICS, TEAM.FINANCE, TEAM.OTHER];
-const ALL_TEAMS = '__all__';
 
 type ViewKey = 'dashboard' | 'queue' | 'knowledge' | 'newTicket' | 'myTickets' | 'sharedWithMe' | 'userLookup';
 const STAFF_VIEWS: ViewKey[] = ['dashboard', 'queue', 'knowledge'];
@@ -79,23 +79,35 @@ function initialsOf(name: string): string {
     .join('');
 }
 
+/** "IT" for one, "3 departments" for several, undefined for all - shared by the scope note and the tab subtitles. */
+function teamLabelOf(team: string[] | undefined): string | undefined {
+  if (!team || team.length === 0) return undefined;
+  return team.length === 1 ? team[0] : `${team.length} departments`;
+}
+
 /** The sidebar's pinned "Your scope" note - what this person can act on from where they're standing. */
-function scopeNoteFor(view: ViewKey, role: IUserRole, team: string | undefined): { value: string; note: string } {
+function scopeNoteFor(view: ViewKey, role: IUserRole, team: string[] | undefined): { value: string; note: string } {
   const value = role.kind === 'admin' ? 'Super admin' : role.kind === 'staff' ? `${role.team} department` : 'Employee';
+  const teamLabel = teamLabelOf(team);
 
   if (view === 'knowledge') {
-    return { value, note: team ? `You review ${team} drafts only.` : "You review every department's drafts." };
+    return { value, note: teamLabel ? `You review ${teamLabel} drafts only.` : "You review every department's drafts." };
   }
   if (view === 'userLookup') {
     return { value, note: "Lookup is read-only. It never changes anyone's access." };
   }
-  if (role.kind === 'admin' && !team) {
+  if (role.kind === 'admin' && !teamLabel) {
     return { value, note: 'Every action outside your own desk is written to the audit log as an override.' };
   }
   if (role.kind === 'employee') {
     return { value, note: 'You can raise tickets and track your own.' };
   }
-  return { value, note: `You can act on ${team} tickets. Other desks are read-only.` };
+  return { value, note: `You can act on ${teamLabel} tickets. Other desks are read-only.` };
+}
+
+interface IQueueDrillFilter {
+  statuses?: string[];
+  slaBreached?: boolean;
 }
 
 /**
@@ -106,11 +118,14 @@ function scopeNoteFor(view: ViewKey, role: IUserRole, team: string | undefined):
  * TicketDetail.
  */
 const OnedeskConsole: React.FC<IOnedeskConsoleProps> = ({ context, useMockData, simulatedScope }) => {
-  const [scope, setScope] = React.useState<string>(ALL_TEAMS);
+  /** Empty means "all departments" - the admin scope picker's default. */
+  const [scope, setScope] = React.useState<string[]>([]);
   const [view, setView] = React.useState<ViewKey>('dashboard');
   const [selectedTicket, setSelectedTicket] = React.useState<string | undefined>(undefined);
   const [ticketOrigin, setTicketOrigin] = React.useState<ViewKey | undefined>(undefined);
   const [navCounts, setNavCounts] = React.useState<INavCounts>({});
+  /** Pre-applied to the Queue tab when a Dashboard "by department" cell drills in; cleared on any ordinary tab switch. */
+  const [queueDrillFilter, setQueueDrillFilter] = React.useState<IQueueDrillFilter | undefined>(undefined);
 
   const service: IOneDeskDataService = React.useMemo(
     () =>
@@ -131,20 +146,29 @@ const OnedeskConsole: React.FC<IOnedeskConsoleProps> = ({ context, useMockData, 
   React.useEffect(() => {
     if (!role) return;
     setView(defaultViewFor(role));
-    setScope(role.kind === 'staff' && role.team ? role.team : ALL_TEAMS);
+    setScope(role.kind === 'staff' && role.team ? [role.team] : []);
     setSelectedTicket(undefined);
     setTicketOrigin(undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role?.kind]);
+
+  // Stable team-scope array reused for every service call and child prop
+  // below - memoized so an unrelated re-render (the 15s nav-count refresh,
+  // say) doesn't hand Dashboard/Queue/KnowledgeReview a new array reference
+  // and trip their own useCallback/useEffect dependencies into refetching.
+  const teamForStaffViews = React.useMemo<string[] | undefined>(() => {
+    if (!role) return undefined;
+    if (role.kind === 'admin') return scope.length === 0 ? undefined : scope;
+    return role.team ? [role.team] : undefined;
+  }, [role, scope]);
 
   // Sidebar badge counts. A convenience layer on top of tabs that already
   // fetch this same data themselves - if it fails, the badges just stay
   // blank rather than blocking the console.
   const refetchNavCounts = React.useCallback((): void => {
     if (!role) return;
-    const team = role.kind === 'admin' ? (scope === ALL_TEAMS ? undefined : scope) : role.team;
     Promise.all([
-      role.kind !== 'employee' ? service.getDashboardCounts(team) : Promise.resolve(undefined),
+      role.kind !== 'employee' ? getScopedDashboardCounts(service, teamForStaffViews) : Promise.resolve(undefined),
       service.getTickets({ requesterEmail: actorEmail }),
       service.getTicketsForParticipant(actorEmail)
     ])
@@ -159,14 +183,26 @@ const OnedeskConsole: React.FC<IOnedeskConsoleProps> = ({ context, useMockData, 
       .catch(() => {
         /* badges are a convenience, not a critical read - swallow and keep them blank */
       });
-  }, [service, role, scope, actorEmail]);
+  }, [service, role, teamForStaffViews, actorEmail]);
 
   useAutoRefresh(refetchNavCounts, 15000, [refetchNavCounts]);
 
   const openTab = (next: ViewKey): void => {
     setSelectedTicket(undefined);
     setTicketOrigin(undefined);
+    setQueueDrillFilter(undefined);
     setView(next);
+  };
+
+  /** A Dashboard "by department" cell was clicked - scope to that one department, apply its filter, and switch tabs. */
+  const openDepartmentDrillDown = (drill: IDashboardDrillDown): void => {
+    setScope([drill.department]);
+    if (drill.view === 'queue') {
+      openTab('queue');
+      setQueueDrillFilter({ statuses: drill.statuses, slaBreached: drill.slaBreached });
+    } else {
+      openTab('knowledge');
+    }
   };
 
   const openTicket = (ticketNumber: string, origin: ViewKey): void => {
@@ -185,7 +221,6 @@ const OnedeskConsole: React.FC<IOnedeskConsoleProps> = ({ context, useMockData, 
   }
 
   const visibleViews = visibleViewsFor(role);
-  const teamForStaffViews = role.kind === 'admin' ? (scope === ALL_TEAMS ? undefined : scope) : role.team;
   // While a ticket is open the tabs themselves aren't "active", but the tab it
   // was opened from still should be - matching the reference design rather
   // than leaving every tab unlit.
@@ -227,14 +262,14 @@ const OnedeskConsole: React.FC<IOnedeskConsoleProps> = ({ context, useMockData, 
         userInitials={initialsOf(displayName)}
         scopePicker={
           role.kind === 'admin' ? (
-            <Select
+            <MultiSelect
               className={styles.scopeSelect}
               label="Department scope"
               labelHidden
-              value={scope}
-              onChange={(e) => setScope(e.target.value)}
               options={TEAMS.map((t) => ({ value: t, label: t }))}
-              placeholderOption="All departments"
+              selected={scope}
+              onChange={setScope}
+              allLabel="All departments"
             />
           ) : undefined
         }
@@ -265,15 +300,17 @@ const OnedeskConsole: React.FC<IOnedeskConsoleProps> = ({ context, useMockData, 
                   service={service}
                   team={teamForStaffViews}
                   onNavigate={openTab}
-                  onSelectTicket={(n) => openTicket(n, 'dashboard')}
-                  onNavigateToDepartment={(dept) => {
-                    setScope(dept);
-                    openTab('queue');
-                  }}
+                  onNavigateToDepartment={openDepartmentDrillDown}
                 />
               )}
               {view === 'queue' && (
-                <Queue service={service} team={teamForStaffViews} onSelectTicket={(n) => openTicket(n, 'queue')} />
+                <Queue
+                  service={service}
+                  team={teamForStaffViews}
+                  onSelectTicket={(n) => openTicket(n, 'queue')}
+                  initialStatuses={queueDrillFilter?.statuses}
+                  initialSlaBreached={queueDrillFilter?.slaBreached}
+                />
               )}
               {view === 'knowledge' && <KnowledgeReview service={service} actorEmail={actorEmail} department={teamForStaffViews} />}
               {view === 'newTicket' && (

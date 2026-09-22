@@ -55,15 +55,6 @@
   letter-spacing: 0.02em;
 }
 
-.title {
-  margin: 0;
-  font-family: $font-display;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: $lh-tight;
-  color: $text;
-}
-
 .badges {
   display: flex;
   align-items: center;
@@ -108,24 +99,32 @@
   font-weight: 600;
 }
 
-// --- body: main + action panel ------------------------------------------------
+// --- body: action panel + info column -------------------------------------------
 
 .body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 404px;
   gap: $space-7;
-  align-items: start;
+  align-items: stretch;
 }
 
 .bodyNoAside {
   grid-template-columns: minmax(0, 1fr);
 }
 
-.main {
+.infoColumn {
   display: flex;
   flex-direction: column;
   gap: $space-7;
   min-width: 0;
+}
+
+// History runs longest and grows fastest (every write adds a row), so it's
+// the one panel that absorbs the gap when the action column next to it is
+// taller - its own white card stretches to fill it, instead of the page's
+// canvas colour ending the column early.
+.historyPanel {
+  flex: 1 1 auto;
 }
 
 .panel {

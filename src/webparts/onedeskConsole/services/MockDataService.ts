@@ -260,8 +260,8 @@ export class MockDataService implements IOneDeskDataService {
   public async getTickets(filter?: ITicketFilter): Promise<ITicket[]> {
     return MOCK_TICKETS.filter(
       (t) =>
-        (!filter?.status || t.Status === filter.status) &&
-        (!filter?.team || t.CurrentOwnerTeam === filter.team) &&
+        (!filter?.status || filter.status.length === 0 || filter.status.indexOf(t.Status) !== -1) &&
+        (!filter?.team || filter.team.length === 0 || filter.team.indexOf(t.CurrentOwnerTeam) !== -1) &&
         (!filter?.requesterEmail || t.RequesterEmail === filter.requesterEmail)
     );
   }
@@ -289,7 +289,7 @@ export class MockDataService implements IOneDeskDataService {
     return MOCK_KNOWLEDGE_ARTICLES.filter(
       (a) =>
         (!filter?.articleStatus || a.ArticleStatus === filter.articleStatus) &&
-        (!filter?.department || a.Department === filter.department)
+        (!filter?.department || filter.department.length === 0 || filter.department.indexOf(a.Department) !== -1)
     );
   }
 

@@ -9,8 +9,8 @@ import { cx } from '../utils/cx';
 export interface IKnowledgeReviewProps {
   service: IOneDeskDataService;
   actorEmail: string;
-  /** undefined means all departments (admin view). */
-  department?: string;
+  /** undefined/empty means all departments (admin view). */
+  department?: string[];
 }
 
 interface IDraftForm {
@@ -91,6 +91,15 @@ const KnowledgeReview: React.FC<IKnowledgeReviewProps> = ({ service, actorEmail,
     setMessage(undefined);
   };
 
+  // Nothing selected once the list is in - land on the top draft rather than
+  // making every reviewer click the first row by hand.
+  React.useEffect(() => {
+    if (!selected && rows.length > 0) {
+      selectDraft(rows[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows]);
+
   const canPublish = selected && selectedEligible && form.title.trim().length > 0 && form.resolution.trim().length > 0 && !submitting;
 
   const publish = (): void => {
@@ -157,7 +166,13 @@ const KnowledgeReview: React.FC<IKnowledgeReviewProps> = ({ service, actorEmail,
     <section className={styles.review}>
       <PageHeader
         title="Knowledge review"
-        subtitle={department ? `Scoped to ${department}` : 'All departments'}
+        subtitle={
+          department && department.length === 1
+            ? `Scoped to ${department[0]}`
+            : department && department.length > 1
+            ? `Scoped to ${department.length} departments`
+            : 'All departments'
+        }
         actions={
           !loading && !error && waitingCount > 0 ? (
             <Pill tone="neutral" size="md">

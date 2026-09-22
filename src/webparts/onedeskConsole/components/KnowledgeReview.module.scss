@@ -6,6 +6,7 @@
   flex-direction: column;
   gap: $space-6;
   min-height: 0;
+  flex: 1 1 auto;
 }
 
 .loading {
@@ -17,7 +18,8 @@
   display: grid;
   grid-template-columns: 324px minmax(0, 1fr);
   gap: $space-6;
-  align-items: start;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 // --- drafts list --------------------------------------------------------------
@@ -27,6 +29,7 @@
 
   display: flex;
   flex-direction: column;
+  min-height: 0;
   overflow: hidden;
 }
 

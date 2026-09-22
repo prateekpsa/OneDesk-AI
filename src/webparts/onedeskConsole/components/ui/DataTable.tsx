@@ -41,6 +41,13 @@ export interface IDataTableProps<T> {
   /** Sticky bar under the table — counts, pagination, a caveat. */
   footer?: React.ReactNode;
   density?: 'compact' | 'comfortable';
+  /**
+   * Overrides the table's default 860px horizontal floor. Lower this for a
+   * table with few/narrow columns that shares its row with another panel
+   * (a department breakdown, a half-width master/detail pane) - otherwise it
+   * forces that whole row wider than the columns actually need.
+   */
+  minWidth?: number | string;
   className?: string;
 }
 
@@ -69,6 +76,7 @@ export function DataTable<T>(props: IDataTableProps<T>): React.ReactElement {
     empty,
     footer,
     density = 'compact',
+    minWidth,
     className
   } = props;
 
@@ -100,7 +108,7 @@ export function DataTable<T>(props: IDataTableProps<T>): React.ReactElement {
   return (
     <div className={cx(styles.frame, className)}>
       <div className={styles.scroll}>
-        <table className={cx(styles.table, styles[density])}>
+        <table className={cx(styles.table, styles[density])} style={minWidth !== undefined ? { minWidth } : undefined}>
           <caption className={styles.caption}>{caption}</caption>
           <colgroup>
             {visible.map((column) => (

@@ -11,6 +11,16 @@
   background: $surface;
   border-right: 1px solid $border-subtle;
   overflow-y: auto;
+  overflow-x: hidden;
+  transition: width $duration $easing;
+}
+
+.collapsed {
+  width: $nav-w-collapsed;
+}
+
+.visuallyHidden {
+  @include visually-hidden;
 }
 
 .groups {
@@ -36,6 +46,16 @@
   }
 }
 
+.groupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.collapsed .groupHeader {
+  justify-content: center;
+}
+
 .groupLabel {
   @include label-caps;
 
@@ -58,6 +78,10 @@
   &:hover {
     background: $surface-hover;
   }
+}
+
+.collapsed .item {
+  justify-content: center;
 }
 
 .itemActive {

@@ -83,22 +83,15 @@
   color: $text-secondary;
 }
 
-// --- body: needs-attention + sidebar ------------------------------------------
+// --- by department (admin only, full width) -------------------------------------
 
-.body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 372px;
-  gap: $space-7;
-  min-height: 0;
-  flex: 1 1 auto;
-}
-
-.needsAttention {
+.byDepartment {
   @include card;
 
   display: flex;
   flex-direction: column;
   min-height: 0;
+  flex: 1 1 auto;
   overflow: hidden;
 }
 
@@ -125,11 +118,37 @@
   color: $text-secondary;
 }
 
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: $space-7;
-  min-height: 0;
+.cellLink {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: inherit;
+
+  &:hover {
+    color: $action-text;
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.cellLinkReset {
+  display: inline-flex;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
 }
 
 .panel {
@@ -141,95 +160,34 @@
   gap: $space-5;
 }
 
-// --- knowledge drafts ----------------------------------------------------------
+// --- priority / age breakdowns --------------------------------------------------
 
-.draftList {
+.breakdowns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-7;
+  min-height: 0;
+}
+
+.barRows {
   display: flex;
   flex-direction: column;
-  gap: $space-3;
+  gap: $space-6;
 }
 
-.draftItem {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: $space-5 $space-6;
-  border: 1px solid $border-subtle;
-  border-radius: $radius-panel;
-  background: $surface-subtle;
-  text-align: left;
-  font: inherit;
-  color: inherit;
-
-  &:hover {
-    background: $surface-hover;
-  }
-}
-
-.draftTitle {
-  font-size: $fs-table;
-  font-weight: 600;
-  color: $text;
-}
-
-.draftMeta {
+.panelFooter {
   font-size: $fs-small;
-  color: $text-secondary;
-}
-
-// --- committees ------------------------------------------------------------
-
-.chipRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $space-3;
-}
-
-.divider {
-  height: 1px;
-  background: $border-subtle;
-}
-
-.committeeDetail {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.committeeName {
-  font-size: $fs-table;
-  font-weight: 600;
-  color: $text;
-}
-
-.committeeContact {
-  font-size: $fs-small;
-  color: $text-secondary;
+  color: $text-muted;
   line-height: $lh-body;
 }
 
-// --- admin adds ----------------------------------------------------------------
-
-.adminAddsList {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: $space-4;
-}
-
-.adminAddsItem {
-  display: flex;
-  align-items: flex-start;
-  gap: $space-3;
-  font-size: $fs-small;
+.ageLabel {
+  font-size: $fs-table;
   color: $text-label;
-  line-height: $lh-body;
 }
 
-.adminAddsIcon {
-  flex-shrink: 0;
-  margin-top: 2px;
-  color: $success-text;
+.ageLabelDanger {
+  font-size: $fs-table;
+  font-weight: 600;
+  color: $danger-ink;
 }

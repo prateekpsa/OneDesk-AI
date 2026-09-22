@@ -147,7 +147,6 @@ const TicketDetail: React.FC<ITicketDetailProps> = ({ service, ticketNumber, rol
             <div className={styles.headerTop}>
               <div className={styles.titleBlock}>
                 <span className={styles.ticketNumber}>{ticket.TicketNumber}</span>
-                <h1 className={styles.title}>{ticket.Title}</h1>
               </div>
               <div className={styles.badges}>
                 <StatusPill status={ticket.Status as TicketStatus} size="md" />
@@ -189,7 +188,38 @@ const TicketDetail: React.FC<ITicketDetailProps> = ({ service, ticketNumber, rol
           </header>
 
           <div className={cx(styles.body, !canAct && styles.bodyNoAside)}>
-            <div className={styles.main}>
+            {canAct && (
+              <section className={styles.actionPanel}>
+                <div className={styles.actionHeader}>
+                  <h2 className={styles.actionTitle}>Take action</h2>
+                  <Pill tone="success" dot outlined={false}>
+                    You can act
+                  </Pill>
+                </div>
+                <div className={styles.tabs} role="tablist">
+                  {TABS.map((t) => (
+                    <Button
+                      key={t.key}
+                      variant="quiet"
+                      size="sm"
+                      role="tab"
+                      aria-selected={tab === t.key}
+                      className={cx(styles.tabButton, tab === t.key && styles.tabActive)}
+                      onClick={() => setTab(t.key)}
+                    >
+                      {t.label}
+                    </Button>
+                  ))}
+                </div>
+                <div className={styles.tabPanel}>
+                  {tab === 'reassign' && <ReassignTab service={service} ticket={ticket} role={role} onDone={reload} />}
+                  {tab === 'addPerson' && <AddPersonTab service={service} ticket={ticket} role={role} onDone={reload} />}
+                  {tab === 'resolve' && <ResolveTab service={service} ticket={ticket} role={role} onDone={reload} />}
+                </div>
+              </section>
+            )}
+
+            <div className={styles.infoColumn}>
               <section className={styles.panel}>
                 <SectionHeading>What the employee reported</SectionHeading>
                 {ticket.Description ? (
@@ -232,7 +262,7 @@ const TicketDetail: React.FC<ITicketDetailProps> = ({ service, ticketNumber, rol
                 )}
               </section>
 
-              <section className={styles.panel}>
+              <section className={cx(styles.panel, styles.historyPanel)}>
                 <SectionHeading aside={<span className={styles.panelNote}>Newest first · written by the flows, never edited here</span>}>
                   History
                 </SectionHeading>
@@ -258,37 +288,6 @@ const TicketDetail: React.FC<ITicketDetailProps> = ({ service, ticketNumber, rol
                 )}
               </section>
             </div>
-
-            {canAct && (
-              <aside className={styles.actionPanel}>
-                <div className={styles.actionHeader}>
-                  <h2 className={styles.actionTitle}>Take action</h2>
-                  <Pill tone="success" dot outlined={false}>
-                    You can act
-                  </Pill>
-                </div>
-                <div className={styles.tabs} role="tablist">
-                  {TABS.map((t) => (
-                    <Button
-                      key={t.key}
-                      variant="quiet"
-                      size="sm"
-                      role="tab"
-                      aria-selected={tab === t.key}
-                      className={cx(styles.tabButton, tab === t.key && styles.tabActive)}
-                      onClick={() => setTab(t.key)}
-                    >
-                      {t.label}
-                    </Button>
-                  ))}
-                </div>
-                <div className={styles.tabPanel}>
-                  {tab === 'reassign' && <ReassignTab service={service} ticket={ticket} role={role} onDone={reload} />}
-                  {tab === 'addPerson' && <AddPersonTab service={service} ticket={ticket} role={role} onDone={reload} />}
-                  {tab === 'resolve' && <ResolveTab service={service} ticket={ticket} role={role} onDone={reload} />}
-                </div>
-              </aside>
-            )}
           </div>
         </>
       )}

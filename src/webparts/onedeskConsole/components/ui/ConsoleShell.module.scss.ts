@@ -1,8 +1,8 @@
 
 require("./ConsoleShell.module.css");
 const styles = {
-  shell: 'shell_d49db50a',
-  fullHeight: 'fullHeight_d49db50a'
+  shell: 'shell_63162e57',
+  fullHeight: 'fullHeight_63162e57'
 };
 
 export default styles;

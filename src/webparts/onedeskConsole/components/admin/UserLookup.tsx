@@ -99,7 +99,7 @@ const UserLookup: React.FC<IUserLookupProps> = ({ service, onSelectTicket }) => 
 
       <div className={styles.searchRow}>
         <SearchInput
-          className={styles.searchInput}
+          fieldClassName={styles.searchInput}
           label="Work email"
           placeholder="person@preferredsquare.com"
           value={email}
@@ -146,6 +146,7 @@ const UserLookup: React.FC<IUserLookupProps> = ({ service, onSelectTicket }) => 
                 rowKey={(t) => t.TicketNumber}
                 onRowSelect={(t) => onSelectTicket(t.TicketNumber)}
                 empty={<EmptyState title="No tickets found for that address" />}
+                minWidth={380}
               />
             </section>
 
@@ -159,6 +160,7 @@ const UserLookup: React.FC<IUserLookupProps> = ({ service, onSelectTicket }) => 
                 onRowSelect={(r) => onSelectTicket(r.ticket.TicketNumber)}
                 empty={<EmptyState title="Nothing has been shared with this person" />}
                 footer={<span>Concerned people can read these tickets. They cannot act on them.</span>}
+                minWidth={420}
               />
             </section>
           </div>

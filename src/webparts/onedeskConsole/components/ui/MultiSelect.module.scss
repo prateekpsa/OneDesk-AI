@@ -1,0 +1,131 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  @include label-caps;
+}
+
+.visuallyHidden {
+  @include visually-hidden;
+}
+
+.trigger {
+  @include control-base;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $action-text;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.summary {
+  @include truncate;
+
+  text-align: left;
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: $text-muted;
+}
+
+.popover {
+  @include card;
+
+  position: absolute;
+  top: calc(100% + #{$space-2});
+  left: 0;
+  z-index: $z-overlay;
+  width: max-content;
+  min-width: 100%;
+  max-width: 280px;
+  box-shadow: $shadow-raised;
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.popoverHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-4;
+}
+
+.popoverTitle {
+  @include label-caps;
+}
+
+.clearButton {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: $fs-small;
+  font-weight: 600;
+  color: $action;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    color: $action-hover;
+    text-decoration: underline;
+  }
+
+  &:disabled {
+    color: $text-muted;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.optionList {
+  border: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  max-height: 240px;
+  overflow-y: auto;
+
+  @include scrollbar;
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-2 $space-3;
+  border-radius: $radius-panel;
+  font-size: $fs-table;
+  color: $text;
+  cursor: pointer;
+
+  &:hover {
+    background: $surface-hover;
+  }
+
+  input[type='checkbox'] {
+    accent-color: $action;
+  }
+}

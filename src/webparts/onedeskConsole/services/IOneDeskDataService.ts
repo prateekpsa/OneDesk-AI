@@ -11,14 +11,17 @@ import { ICreateTicketInput } from '../models/ICreateTicketInput';
 import { ICreateTicketResult } from '../models/ICreateTicketResult';
 
 export interface ITicketFilter {
-  status?: string;
-  team?: string;
+  /** Any of these statuses match ("or", not "and"). Empty/undefined means every status. */
+  status?: string[];
+  /** Any of these teams match. Empty/undefined means every department. */
+  team?: string[];
   requesterEmail?: string;
 }
 
 export interface IKnowledgeArticleFilter {
   articleStatus?: string;
-  department?: string;
+  /** Any of these departments match. Empty/undefined means every department. */
+  department?: string[];
 }
 
 /**

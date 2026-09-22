@@ -1,0 +1,43 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.row {
+  display: grid;
+  gap: $space-5;
+  align-items: center;
+}
+
+.label {
+  font-size: $fs-table;
+  color: $text-label;
+  justify-self: start;
+}
+
+.track {
+  display: block;
+  height: $space-3;
+  border-radius: $space-1;
+  background: $surface-sunken;
+}
+
+.fill {
+  display: block;
+  height: $space-3;
+  border-radius: $space-1;
+  background: $action;
+}
+
+.fillDanger {
+  background: $danger-text;
+}
+
+.value {
+  font-size: $fs-body;
+  font-weight: 700;
+  color: $text;
+  text-align: right;
+}
+
+.valueDanger {
+  color: $danger-text;
+}

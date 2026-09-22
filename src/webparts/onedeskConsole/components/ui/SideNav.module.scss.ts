@@ -1,18 +1,21 @@
 
 require("./SideNav.module.css");
 const styles = {
-  sideNav: 'sideNav_7a16d7f9',
-  groups: 'groups_7a16d7f9',
-  group: 'group_7a16d7f9',
-  groupLabel: 'groupLabel_7a16d7f9',
-  item: 'item_7a16d7f9',
-  itemActive: 'itemActive_7a16d7f9',
-  itemLabel: 'itemLabel_7a16d7f9',
-  badge: 'badge_7a16d7f9',
-  scopeCard: 'scopeCard_7a16d7f9',
-  scopeLabel: 'scopeLabel_7a16d7f9',
-  scopeValue: 'scopeValue_7a16d7f9',
-  scopeNote: 'scopeNote_7a16d7f9'
+  sideNav: 'sideNav_86543495',
+  collapsed: 'collapsed_86543495',
+  visuallyHidden: 'visuallyHidden_86543495',
+  groups: 'groups_86543495',
+  group: 'group_86543495',
+  groupHeader: 'groupHeader_86543495',
+  groupLabel: 'groupLabel_86543495',
+  item: 'item_86543495',
+  itemActive: 'itemActive_86543495',
+  itemLabel: 'itemLabel_86543495',
+  badge: 'badge_86543495',
+  scopeCard: 'scopeCard_86543495',
+  scopeLabel: 'scopeLabel_86543495',
+  scopeValue: 'scopeValue_86543495',
+  scopeNote: 'scopeNote_86543495'
 };
 
 export default styles;

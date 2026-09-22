@@ -24,6 +24,18 @@ export function isCloseToBreaching(ticket: ITicket): boolean {
   return dueMs - Date.now() <= bufferMs;
 }
 
+/**
+ * Whole days elapsed since TicketCreatedDate (not SharePoint's Modified),
+ * so a system-account edit never shifts a ticket's age. undefined for a
+ * ticket with no TicketCreatedDate, same as isBreached does for a missing
+ * SLADueDateTime, rather than letting an Invalid Date poison a bucket count.
+ */
+export function getAgeInDays(ticket: ITicket): number | undefined {
+  if (!ticket.TicketCreatedDate) return undefined;
+  const created = new Date(ticket.TicketCreatedDate).getTime();
+  return Math.floor((Date.now() - created) / (1000 * 60 * 60 * 24));
+}
+
 /** Single classification used by SlaPill and the Queue/Dashboard "breaching" tallies. */
 export function getSlaState(ticket: ITicket): SlaState {
   if (isTerminal(ticket.Status)) return 'closed';
